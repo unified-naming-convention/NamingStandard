@@ -6,3 +6,6 @@
 ```lua
 print(getpcd(workspace.Union))
 ```
+
+*** NOTE:
+This function has been deprecated in place of `gethiddenproperty(part, "PhysicalConfigData"). Don't use this for new work!
