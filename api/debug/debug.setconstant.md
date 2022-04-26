@@ -1,5 +1,5 @@
 # debug.getconstant
-**Signature:** `debug.setconstant(f: (function | number), idx: number, obj: any): table` <br>
+**Signature:** `debug.setconstant(f: (function | number), idx: number, obj: any)` <br>
 **Aliases:** N/A <br>
 **Description:** Sets constant idx from function/level idx to val. NOTE: The new object MUST be of the same type as the old. <br>
 **Example:**
