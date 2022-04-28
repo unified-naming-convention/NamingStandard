@@ -110,7 +110,7 @@ data ..= "\n"
 if #missing > 0 then
     data ..= "Missing:"
     table.foreach(missing, function(i,v)
-        data ..= ("["..i.."] "..v)
+        data ..= ("["..i.."] "..v.."\n")
     end)
 end
 
