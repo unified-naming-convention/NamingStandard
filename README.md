@@ -24,5 +24,9 @@ You can find the badge here: https://scriptunc.org/badge
 
 This will notify people of your alliance in providing scripters with an easier method of engineering scripts that your consumers can enjoy.
 
+## Checking your environment
+
+You can run the UNC environment checking script to see how well your executor environment supports the UNC standard. Find the script [here.](UNCCheckEnv.lua) The script determines what is missing, and writes the results to file under workspace.
+
 ## Contributing
 Go [here](CONTRIBUTING.md) for a guide on contributing.
