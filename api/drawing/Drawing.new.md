@@ -22,8 +22,8 @@ type DrawingSquare: {
 }
 
 type DrawingLine: {
-	PointA: Vector2,
-	PointB:  Vector2,
+	From: Vector2,
+	To:  Vector2,
 	Color: Color3,
 	Thickness: number,
 	Transparency: number 
@@ -54,10 +54,10 @@ type DrawingQuad: {
 	Color: Color3,
 	Filled: boolean,
 	Thickness: number,
-	Point1: Vector2,
-	Point2: Vector2,
-	Point3: Vector2,
-	Point4: Vector2,
+	PointA: Vector2,
+	PointB: Vector2,
+	PointC: Vector2,
+	PointD: Vector2,
 	Transparency: number 
 }
 
