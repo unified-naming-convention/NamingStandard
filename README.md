@@ -1,5 +1,5 @@
 # Unified Naming Convention
-aka UNC, is an organization between executor developers to provide a unified scripting api for our scripters.
+aka UNC, is an organization between executor developers to provide a unified scripting API for our scripters.
 
 **Please go to our official website for better styled information: https://scriptunc.org/**
 
@@ -15,10 +15,10 @@ This is reality for scripters who want cross compatibilty in their scripts. Scri
 One variant of a script should naturally work on all script executors which have their environment properly fitted to the UNC. 
 
 ## How?
-The UNC provides standards for naming conventions as well as api functionality. The standards written in  markdown on this github. Edits or additions are done through pull requests. Edits and additions are manually approved by the UNC council and discussed by everyone.
+The UNC provides standards for naming conventions as well as API functionality. The standard is written in markdown on this GitHub. Edits or additions are done through pull requests. Edits and additions are manually approved by the UNC council and discussed by everyone.
 
 ## Supporting UNC
-As a product owner, your support of UNC by following the api will result in a far smoother experiencer for scripters, as they are able to work on scripts that they can confidently say will work on **most** products. Once you have integrated UNC's api, you can display so by adding the badge to your website, thread or application.
+As a product owner, your support of UNC by following the API will result in a far smoother experience for scripters, as they are able to work on scripts that they can confidently say will work on **most** products. Once you have implemented UNC's API, you can display so by adding the badge to your website, thread or application.
 
 You can find the badge here: https://scriptunc.org/badge
 
