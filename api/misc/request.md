@@ -1,5 +1,5 @@
 # request
-**Signature:** `request(options: HttpRequest): HttpResponce` <br>
+**Signature:** `request(options: HttpRequest): HttpResponse` <br>
 **Aliases:** http.request, http_request <br>
 **Description:** Creates an HTTP request using the conventionally made options. <br>
 ```lua
@@ -27,6 +27,6 @@ request({ Method = "GET", Url = "https://www.google.com/" })
 **Headers: (NOTE: The prefix (i.e. "SW-User-Identifier") is fundamentally needed for identifying the executor on a web-server)**
 | Header   |  Description  |
 |----------|:-------------:|
-| PREFIX-User-Identifier |  This is data that is specified to each user, and does not change if the script executor gets used across computers |
-| PREFIX-Fingerprint |    This is the HardwareID of the user.   |
+| PREFIX-User-Identifier |  This is data that is specified to each user, and does not change if the script executor gets used across computers. Implementation defined. |
+| PREFIX-Fingerprint |    This is the Hardware ID of the user. Implementation defined.   |
 | User-Agent | An identifier of the executor and the version of it ("EasyExecutor 1.0.0.0") |

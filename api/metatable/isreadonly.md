@@ -5,9 +5,10 @@
 **Example:**
 ```lua
 local mt = getrawmetatable(game)
-local old = mt._index
+
+print(isreadonly(mt)) -- true
 
 setreadonly(mt, false)
 
-print(isreadonly(mt)) --can you guess the response?
+print(isreadonly(mt)) -- false
 ```

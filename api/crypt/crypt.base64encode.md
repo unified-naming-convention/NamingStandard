@@ -4,5 +4,5 @@
 **Description:** Passed data is base64 encoded and returned.<br>
 **Example:**
 ```lua
-print(crypt.base64encode("i'm now encoded!")) --aSdtIG5vdyBlbmNvZGVk is printed!
+print(crypt.base64encode("i'm now encoded!")) -- aSdtIG5vdyBlbmNvZGVkIQ== is printed!
 ```

@@ -4,5 +4,5 @@
 **Description:** Returns the identity of the current thread <br>
 **Example:**
 ```lua
-print(getthreadidentity()) --would return the thread identity, i.e. 6/7/8 (the "level")
+print(getthreadidentity()) -- would return the thread identity, i.e. 6/7/8 (the "level")
 ```

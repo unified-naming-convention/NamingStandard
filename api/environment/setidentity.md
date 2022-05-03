@@ -5,4 +5,5 @@
 **Example:**
 ```lua
 setidentity(8)
+assert(getthreadidentity() == 8, "yo?")
 ```

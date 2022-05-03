@@ -1,7 +1,7 @@
 # gethui
 **Signature:** `gethui(): Instance` <br>
 **Aliases:** N/A <br>
-**Description:** gethui, aka get hidden ui, returns a ui container to store ui in as an alternative to CoreGui. This container is designed to prevent ui based detections such as focused textbox or hacky methods of getting whats loaded inside CoreGui. <br>
+**Description:** gethui, aka get hidden UI, returns a UI container to store UI in as an alternative to CoreGui. This container is designed to prevent UI based detections such as the focused TextBox or hacky methods of getting whats loaded inside CoreGui. <br>
 **Example:**
 ```lua
 local gui = Instance.new("ScreenGui")

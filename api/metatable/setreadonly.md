@@ -5,7 +5,7 @@
 **Example:**
 ```lua
 local mt = getrawmetatable(game)
-local old = mt._index
+local old = mt.__index
 
 setreadonly(mt, false)
 ```
