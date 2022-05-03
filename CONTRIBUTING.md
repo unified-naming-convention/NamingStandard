@@ -4,7 +4,7 @@
 * Adding a new function can be done by copying TEMPLATE.md, renaming it, and editing it as needed.
 * You may provide edits of existing functions, just edit and submit it.
 * When possible, organise files in their respective category folders.
-* When writing the function signature, please make sure it is **valid typed luau syntax**. Documentation for typed luau can be found [here](https://luau-lang.org/typecheck#union-types).
+* When writing the function signature, please make sure it is **valid typed Luau syntax**. Documentation for typed luau can be found [here](https://luau-lang.org/typecheck#union-types).
 * When referencing arguments of a function in the description, please use `` in order to make `it look nice like so`.
 * Please confirm a function has not already been added to the API before you submit it.
 
