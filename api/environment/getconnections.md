@@ -31,5 +31,6 @@ ConnectionInfo:Enable()
 ```lua
 for i,v in pairs(getconnections(workspace.ChildAdded)) do
 	v:Disable() -- ChildAdded events will no longer fire on workspace
+	-- NOTE: v.Disable(v) must be supported, but v.Disable() is optional.
 end
 ```

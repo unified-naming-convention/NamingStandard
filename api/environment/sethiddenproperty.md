@@ -1,7 +1,7 @@
 # sethiddenproperty
 **Signature:** `sethiddenproperty(object: Instance, property: string, value: any): boolean` <br>
 **Aliases:** N/A <br>
-**Description:** Set the hidden property from object with value. Returns `true` if the property was hidden. <br>
+**Description:** Set the hidden property of `object` to `value`. Returns `true` if the property was hidden. <br>
 **Example:**
 ```lua
 local new_part = Instance.new("Part")

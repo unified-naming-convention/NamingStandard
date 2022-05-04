@@ -1,7 +1,7 @@
 # cache.replace
 **Signature:** `cache.replace(inst: Instance, to: Instance)` <br>
 **Aliases:** N/A <br>
-**Description:** Replaces `inst` with `to` in the  instance cache. <br>
+**Description:** Replaces `inst` with `to` in the instance cache. <br>
 **Example:**
 ```lua
 cache.replace(game:GetService("Workspace"), game:GetService("Players"))

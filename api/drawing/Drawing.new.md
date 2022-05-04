@@ -83,7 +83,7 @@ circle.Transparency = 0.9;
 
 -- don't forget to clean up after yourself!
 
-for obj in next, {circle, square, line, text, image, quad, triangle} do
+for obj in next, {circle} do
     obj:Destroy(); -- or :Remove()
 end
 ```

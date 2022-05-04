@@ -6,3 +6,6 @@
 ```lua
 loadstring("print'hi'")()
 ```
+
+### Note:
+Supporting loading of Luau bytecode is a security vulnerability, thus not part of the standard. It is highly advised you do not transfer this functionality from vanilla Lua.

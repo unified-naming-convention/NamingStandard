@@ -4,5 +4,6 @@
 **Description:** Returns a boolean indicating whether the specified folder exists or doesn't <br>
 **Example:**
 ```lua
+makefolder("somefolder")
 print(isfolder("somefolder")) --> true
 ```

@@ -4,5 +4,5 @@
 **Description:** Creates a folder with the path specified <br>
 **Example:**
 ```lua
-makefolder("not trash")
+makefolder("juice")
 ```

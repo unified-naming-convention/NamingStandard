@@ -1,7 +1,7 @@
 # mousemoverel
 **Signature:** `mousemoverel(x: number, y: number)` <br>
 **Aliases:** N/A <br>
-**Description:** Moves the mouse relative to the current mouse position by coordinates x and y. <br>
+**Description:** Moves the mouse relative to the current mouse position by coordinates `x` and `y`. <br>
 **Example:**
 ```lua
 local player = game.Players.LocalPlayer 

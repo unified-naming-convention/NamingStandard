@@ -5,4 +5,5 @@
 **Example:**
 ```lua
 setclipboard(crypt.encrypt("hello, world!", "wGc3ZKjI0xAinQKZkmcjrtR7s92r6eq4hhYRRK4o6Gg=", "OUZuWG5LZS9IZHVQQjgrbHVPQTQ0Zz09"))
+--> MGE+JZOLPPDJeGPCqw==
 ```
