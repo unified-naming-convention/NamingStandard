@@ -4,5 +4,5 @@
 **Description:** Writes a file in path with the content specified <br>
 **Example:**
 ```lua
-writefile("data.txt", "azulx is gay discount albanian!")
+writefile("data.txt", "some data")
 ```
