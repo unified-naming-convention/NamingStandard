@@ -17,5 +17,7 @@
 * The description must be coherent, if the function is basic enough to not warrant one - you may put "N/A" in the description.
 * Functions don't always require an alias, you may just also put N/A in that field.
 
+* For automated testing purposes, all code examples within code blocks should be able to run independently and verify during runtime that the host executor runs it successfully. 
+
 ## Submitting your edits and/or additions
 This can be done through [github pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests). Clone the repository, make your changes, then submit a pull request. The pull request will be reviewed by several members of the UNC before it is merged.
