@@ -16,6 +16,8 @@ This is useful for metamethod hooks that behave differently when called by the g
 
 ### Example
 
+Prevent the exploit from invoking `__namecall` with the global `game` object:
+
 ```lua
 local internal = {}
 
@@ -255,6 +257,10 @@ Generates a chunk from the given source code. The environment of the returned fu
 If there are no compilation errors, the chunk is returned by itself; otherwise, it returns `nil` plus the error message.
 
 `chunkname` is used as the chunk name for error messages and debug information. When absent, it defaults to `source`.
+
+> ### ⛔ Danger
+> Vanilla Lua allows `source` to contain Lua bytecode, but it is a security vulnerability.\
+> This is a feature that should not be implemented.
 
 ### Parameters
 
