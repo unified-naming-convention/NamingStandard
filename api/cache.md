@@ -8,7 +8,7 @@ Note that some of the methods are only available as global functions. They will 
 
 ## cache.invalidate
 
-```ts
+```lua
 function invalidate(object: Instance): ()
 ```
 
@@ -30,7 +30,7 @@ print(Lighting, Lighting == game:GetService("Lighting")) --> Lighting, false
 
 ## cache.iscached
 
-```ts
+```lua
 function iscached(object: Instance): boolean
 ```
 
@@ -52,7 +52,7 @@ print(cache.iscached(Lighting)) --> false
 
 ## cache.replace
 
-```ts
+```lua
 function replace(object: Instance, newObject: Instance): ()
 ```
 
@@ -78,7 +78,7 @@ print(Lighting) --> Players
 
 ## cloneref `🌍 Global`
 
-```ts
+```lua
 function cloneref(object: Instance): Instance
 ```
 
@@ -101,7 +101,7 @@ print(Lighting == LightingClone) --> false
 
 ## compareinstances `🌍 Global`
 
-```ts
+```lua
 function compareinstances(a: Instance, b: Instance): boolean
 ```
 

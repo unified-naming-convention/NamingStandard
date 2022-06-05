@@ -1,6 +1,6 @@
 ## FunctionName `⏰ Yields` `📌 Custom Tag`
 
-```ts
+```lua
 function FunctionName(param: string): ()
 ```
 

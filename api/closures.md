@@ -6,7 +6,7 @@ These functions are used to create, identify, and edit Lua or C closures.
 
 ## checkcaller
 
-```ts
+```lua
 function checkcaller(): boolean
 ```
 
@@ -41,7 +41,7 @@ game:Destroy() --> Error "No __namecall on game allowed"
 
 ## clonefunction
 
-```ts
+```lua
 clonefunction<T>(func: T): T
 ```
 
@@ -69,7 +69,7 @@ print(foo == bar) --> false
 
 ## getcallingscript
 
-```ts
+```lua
 function getcallingscript(): LocalScript | ModuleScript
 ```
 
@@ -99,7 +99,7 @@ end)
 
 ## getscriptclosure
 
-```ts
+```lua
 function getscriptclosure(script: LocalScript | ModuleScript): Function
 ```
 
@@ -133,7 +133,7 @@ print(Command == CommandClone) --> false
 
 ## hookfunction
 
-```ts
+```lua
 function hookfunction<T>(func: T, hook: Function): T
 ```
 
@@ -174,11 +174,11 @@ internal.foo() --> Hello, world!
 
 ## iscclosure
 
-```ts
+```lua
 function iscclosure(func: Function): boolean
 ```
 
-Returns whether or not `func` is a C closure.
+Returns whether or not `func` is a closure whose source is written in C.
 
 ### Parameters
 
@@ -195,11 +195,11 @@ print(iscclosure(function() end)) --> false
 
 ## islclosure
 
-```ts
+```lua
 function islclosure(func: Function): boolean
 ```
 
-Returns whether or not `func` is a Lua closure.
+Returns whether or not `func` is a closure whose source is written in Luau.
 
 ### Parameters
 
@@ -216,7 +216,7 @@ print(islclosure(function() end)) --> true
 
 ## isexecutorclosure
 
-```ts
+```lua
 function isexecutorclosure(func: Function): boolean
 ```
 
@@ -246,7 +246,7 @@ print(isexecutorclosure(print)) --> false
 
 ## loadstring
 
-```ts
+```lua
 function loadstring(source: string, chunkname: string?): (Function?, string?)
 ```
 
@@ -275,7 +275,7 @@ assert(func, err)() --> Errors "Malformed string"
 
 ## newcclosure
 
-```ts
+```lua
 function newcclosure<T>(func: T): T
 ```
 
