@@ -1,6 +1,6 @@
 # Closures
 
-These functions are used to create, identify, and edit Lua or C closures.
+These functions are used to create, identify, and modify Luau closures.
 
 ---
 
