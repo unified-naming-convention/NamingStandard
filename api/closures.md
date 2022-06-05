@@ -72,7 +72,7 @@ print(foo == bar) --> false
 ## getcallingscript
 
 ```lua
-function getcallingscript(): LocalScript | ModuleScript
+function getcallingscript(): BaseScript
 ```
 
 Returns the script responsible for the currently running function.
@@ -102,10 +102,10 @@ end)
 ## getscriptclosure
 
 ```lua
-function getscriptclosure(script: LocalScript | ModuleScript): Function
+function getscriptclosure(script: LocalScript | ModuleScript): function
 ```
 
-Generates a new closure using the given script's deserialized bytecode.
+Generates a new closure using the bytecode of `script`.
 
 ### Parameters
 
@@ -136,7 +136,7 @@ print(Command == CommandClone) --> false
 ## hookfunction
 
 ```lua
-function hookfunction<T>(func: T, hook: Function): T
+function hookfunction<T>(func: T, hook: function): T
 ```
 
 Replaces `func` with `hook` internally, where `hook` will be invoked in place of `func` when called.
@@ -177,7 +177,7 @@ internal.foo() --> Hello, world!
 ## iscclosure
 
 ```lua
-function iscclosure(func: Function): boolean
+function iscclosure(func: function): boolean
 ```
 
 Returns whether or not `func` is a closure whose source is written in C.
@@ -198,7 +198,7 @@ print(iscclosure(function() end)) --> false
 ## islclosure
 
 ```lua
-function islclosure(func: Function): boolean
+function islclosure(func: function): boolean
 ```
 
 Returns whether or not `func` is a closure whose source is written in Luau.
@@ -219,7 +219,7 @@ print(islclosure(function() end)) --> true
 ## isexecutorclosure
 
 ```lua
-function isexecutorclosure(func: Function): boolean
+function isexecutorclosure(func: function): boolean
 ```
 
 Returns whether or not `func` is a C closure created by the executor.
@@ -249,7 +249,7 @@ print(isexecutorclosure(print)) --> false
 ## loadstring
 
 ```lua
-function loadstring(source: string, chunkname: string?): (Function?, string?)
+function loadstring(source: string, chunkname: string?): (function?, string?)
 ```
 
 Generates a chunk from the given source code. The environment of the returned function is the global environment.
@@ -285,7 +285,7 @@ assert(func, err)() --> Errors "Malformed string"
 function newcclosure<T>(func: T): T
 ```
 
-Returns a C closure that wraps `func`. The result is functionally identical to `fn`, but identifies as a C closure, and may have different metadata.
+Returns a C closure that wraps `func`. The result is functionally identical to `func`, but identifies as a C closure, and may have different metadata.
 
 > ### ⚠️ Warning
 > Attempting to yield inside a C closure will throw an error.\
