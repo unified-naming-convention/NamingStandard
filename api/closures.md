@@ -19,9 +19,9 @@ This is useful for metamethod hooks that behave differently when called by the g
 Prevent the exploit from invoking `__namecall` with the global `game` object:
 
 ```lua
-local internal = {}
+local refs = {}
 
-internal.__namecall = hookmetamethod(game, "__namecall", function(...)
+refs.__namecall = hookmetamethod(game, "__namecall", function(...)
 	local self = ...
 	local isRunningOnExecutor = checkcaller()
 
@@ -33,7 +33,7 @@ internal.__namecall = hookmetamethod(game, "__namecall", function(...)
 		end
 	end
 
-	return internal.__namecall(...)
+	return refs.__namecall(...)
 end)
 
 game:Destroy() --> Error "No __namecall on game allowed"
@@ -82,18 +82,21 @@ Returns the script responsible for the currently running function.
 Prevent scripts in PlayerGui from invoking the `__namecall` hook:
 
 ```lua
-local internal = {}
+local refs = {}
 local bannedScripts = game:GetService("Players").LocalPlayer.PlayerGui
 
-internal.__namecall = hookmetamethod(game, "__namecall", function(...)
+refs.__namecall = hookmetamethod(game, "__namecall", function(...)
 	local caller = getcallingscript()
+
+	-- Use '.' notation to call the IsDescendantOf method without invoking
+	-- __namecall and causing a recursive loop.
 	local isBanned = caller.IsDescendantOf(caller, bannedScripts)
 
 	if isBanned then
 		error("Not allowed to invoke __namecall")
 	end
 
-	return internal.__namecall(...)
+	return refs.__namecall(...)
 end)
 ```
 
