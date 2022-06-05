@@ -2,14 +2,14 @@
 
 The **cache** library provides methods for modifying the internal Instance cache.
 
-Note that some of the methods are only available as global functions.
+Note that some of the methods are only available as global functions. They will be marked as `🌍 Global`.
 
 ---
 
 ## cache.invalidate
 
 ```ts
-function invalidate(object: Instance): void
+function invalidate(object: Instance): ()
 ```
 
 Deletes `object` from the Instance cache. Effectively invalidates `object` as a reference to the underlying Instance.
@@ -53,7 +53,7 @@ print(cache.iscached(Lighting)) --> false
 ## cache.replace
 
 ```ts
-function replace(object: Instance, newObject: Instance): void
+function replace(object: Instance, newObject: Instance): ()
 ```
 
 Replaces `object` in the Instance cache with `newObject`.
@@ -76,7 +76,7 @@ print(Lighting) --> Players
 
 ---
 
-## cloneref
+## cloneref `🌍 Global`
 
 ```ts
 function cloneref(object: Instance): Instance
@@ -99,7 +99,7 @@ print(Lighting == LightingClone) --> false
 
 ---
 
-## compareinstances
+## compareinstances `🌍 Global`
 
 ```ts
 function compareinstances(a: Instance, b: Instance): boolean
