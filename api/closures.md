@@ -141,10 +141,10 @@ function hookfunction<T>(func: T, hook: function): T
 
 Replaces `func` with `hook` internally, where `hook` will be invoked in place of `func` when called.
 
-Returns a copy of `func` that can be used to access the original function.
+Returns a new function that can be used to access the original definition of `func`.
 
 > ### ⚠️ Warning
-> The hook **must** have the same amount of upvalues as `func`.\
+> If `func` is a Luau closure, `hook` **must** have the same amount of upvalues as `func`.\
 > Read more on [Lua visibility rules](http://www.lua.org/manual/5.1/manual.html#2.6).
 
 ### Parameters
@@ -163,13 +163,12 @@ local function foo()
 	print("Hello, world!")
 end
 
-local internal = {}
-internal.foo = hookfunction(foo, function(...)
+local fooRef = hookfunction(foo, function(...)
 	print("Hooked!")
 end)
 
 foo() --> Hooked!
-internal.foo() --> Hello, world!
+fooRef() --> Hello, world!
 ```
 
 ---
