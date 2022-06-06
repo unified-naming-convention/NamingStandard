@@ -1,4 +1,6 @@
-## FunctionName `⏰ Yields` `📌 Custom Tag`
+## FunctionName
+
+`⏰ Yields` `🌎 Global` `🔎 Needs Investigation` `📌 Custom Tag`
 
 ```lua
 function FunctionName(param: string): ()

@@ -1,6 +1,6 @@
 # Closures
 
-These functions are used to create, identify, and modify Luau closures.
+The **closure** functions are used to create, identify, and interact with Luau closures.
 
 ---
 

@@ -2,7 +2,7 @@
 
 The **console** functions are used to interact with one console window.
 
-Behavior and examples documented on this page is based on Script-Ware.
+Behavior and examples documented on this page are based on Script-Ware.
 
 ---
 
@@ -42,7 +42,7 @@ Opens the console window. Text previously output to the console will not be clea
 
 > ### 🔎 Note
 > Some executors also allow functions like `rconsoleprint` to open the console.\
-> This is confusing behavior that should not vary between executors.
+> This is confusing behavior that should not be relied on.
 
 ### Aliases
 
@@ -117,7 +117,9 @@ rconsolecreate()
 
 ---
 
-## rconsoleinput `⏰ Yields`
+## rconsoleinput
+
+`⏰ Yields`
 
 ```lua
 function rconsoleinput(): string

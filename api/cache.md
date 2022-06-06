@@ -2,7 +2,7 @@
 
 The **cache** library provides methods for modifying the internal Instance cache.
 
-Note that some of the methods are only available as global functions. They will be marked as `🌍 Global`.
+Note that some of the methods are only available as global functions. They will be tagged with `🌎 Global`.
 
 ---
 
@@ -76,7 +76,9 @@ print(Lighting) --> Players
 
 ---
 
-## cloneref `🌍 Global`
+## cloneref
+
+`🌎 Global`
 
 ```lua
 function cloneref(object: Instance): Instance
@@ -99,7 +101,9 @@ print(Lighting == LightingClone) --> false
 
 ---
 
-## compareinstances `🌍 Global`
+## compareinstances
+
+`🌎 Global`
 
 ```lua
 function compareinstances(a: Instance, b: Instance): boolean
