@@ -258,7 +258,7 @@ Generates a chunk from the given source code. The environment of the returned fu
 
 If there are no compilation errors, the chunk is returned by itself; otherwise, it returns `nil` plus the error message.
 
-`chunkname` is used as the chunk name for error messages and debug information. When absent, it defaults to `source`.
+`chunkname` is used as the chunk name for error messages and debug information. When absent, it defaults to a **random string**.
 
 > ### ⛔ Danger
 > Vanilla Lua allows `source` to contain Lua bytecode, but it is a security vulnerability.\

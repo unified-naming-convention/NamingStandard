@@ -70,7 +70,7 @@ print(raw) --> Hello, World!
 
 ## crypt.encrypt
 
-`🔎 RFC`
+`🪲 Compatibility` `🔎 RFC`
 
 ```lua
 function crypt.encrypt(data: string, key: string, iv: string?, mode: string?): (string, string)
@@ -96,7 +96,7 @@ The cipher modes are 'CBC', 'ECB', 'CTR', 'CFB', 'OFB', and 'GCM'. The default i
 
 ## crypt.decrypt
 
-`🔎 RFC`
+`🪲 Compatibility` `🔎 RFC`
 
 ```lua
 function crypt.decrypt(data: string, key: string, iv: string, mode: string): string
