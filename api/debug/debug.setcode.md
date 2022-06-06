@@ -1,5 +1,4 @@
 # debug.setcode
-## **! WARNING: ARBITRARY CODE EXECUTION POTENTIAL !** <br>
 **Signature:** `debug.setcode(f: (function | number), idx: number, insn: number)` <br>
 **Signature:** `debug.setcode(f: (function | number), insns: {number}, startIdx: number?)` <br>
 **Aliases:** N/A <br>
