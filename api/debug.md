@@ -194,7 +194,7 @@ end
 `⛔ Exception`
 
 ```lua
-function debug.getstack(level: number, index: number?): any
+function debug.getstack(level: number, index: number?): any | {any}
 ```
 
 Returns the value at `index` in the stack frame `level`. Throws an error if no value could be found.
