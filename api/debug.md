@@ -161,7 +161,7 @@ Returns a list of protos of the function or level `func`.
 
 > ### 🛡️ Security
 > In some executors, the proto is non-functional, but debug information is preserved.\
-> To retrieve a callable function, see [`debug.getproto`](#debug.getproto).
+> To retrieve a callable function, see [`debug.getproto`](#debuggetproto).
 
 ### Parameters
 
@@ -240,7 +240,7 @@ Read more on [Lua visibility rules](http://www.lua.org/manual/5.1/manual.html#2.
 
 > ### 🔎 Note
 > Some Luau optimizations automatically inline certain constants like strings and integers.\
-> They can be retrieved through [`debug.getconstant`](#debug.getconstant) instead.
+> They can be retrieved through [`debug.getconstant`](#debuggetconstant) instead.
 
 ### Parameters
 
