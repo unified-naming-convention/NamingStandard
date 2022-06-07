@@ -16,7 +16,7 @@ This is useful for metamethod hooks that behave differently when called by the g
 
 ### Example
 
-Prevent the exploit from invoking `__namecall` with the global `game` object:
+Prevent the executor from invoking `__namecall` with the global `game` object:
 
 ```lua
 local refs = {}
@@ -147,8 +147,8 @@ Replaces `func` with `hook` internally, where `hook` will be invoked in place of
 Returns a new function that can be used to access the original definition of `func`.
 
 > ### ⚠️ Warning
-> If `func` is a Luau closure, `hook` **must** have the same amount of upvalues as `func`.\
-> Read more on [Lua visibility rules](http://www.lua.org/manual/5.1/manual.html#2.6).
+> If `func` is a Luau function (`islclosure(func) --> true`), the upvalue count of `hook` must be less than or equal to that of `func`.\
+> Read more about upvalues on [Lua visibility rules](http://www.lua.org/manual/5.1/manual.html#2.6).
 
 ### Parameters
 

@@ -88,7 +88,7 @@ Returns a copy of the Instance reference to `object`. This is useful for managin
 
 ### Parameters
 
- * `object`: The Instance to clone.
+ * `object` - The Instance to clone.
 
 ### Example
 
@@ -113,8 +113,8 @@ Returns whether objects `a` and `b` both reference the same Instance.
 
 ### Parameters
 
- * `a`: The first Instance to compare.
- * `b`: The second Instance to compare.
+ * `a` - The first Instance to compare.
+ * `b` - The second Instance to compare.
 
 ### Example
 

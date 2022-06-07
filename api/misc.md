@@ -194,7 +194,7 @@ Sends an HTTP request using the specified options. Yields until the request is c
 
 ### Headers
 
-The exploit provides the following headers for identification on a web server:
+The executor provides the following headers for identification on a web server:
 
 | Header | Description |
 | ------ | ----------- |
