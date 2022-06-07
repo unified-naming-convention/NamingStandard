@@ -387,7 +387,7 @@ end)
 test("debug.getstack", {}, function()
 	local _ = "a" .. "b"
 	assert(debug.getstack(1, 1) == "ab", "The first item in the stack should be 'ab'")
-	assert(debug.getstack(1)[1] == "ab", "The second item in the stack should be 'ab'")
+	assert(debug.getstack(1)[1] == "ab", "The first item in the stack table should be 'ab'")
 end)
 
 test("debug.getupvalue", {}, function()
