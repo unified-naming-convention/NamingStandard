@@ -4,31 +4,6 @@ The **miscellaneous** functions are a temporary collection of functions that are
 
 ---
 
-## getcustomasset
-
-```lua
-function getcustomasset(path: string, noCache: boolean): string
-```
-
-Returns a `rbxasset://` content id for the asset located at `path`, allowing you to use unmoderated assets. Internally, files are copied to the game's content directory.
-
-If `noCache` is false, the file will be cached, allowing subsequent calls to `getcustomasset` to return the same content id.
-
-### Parameters
-
- * `path` - The path to the asset.
- * `noCache` - Whether or not to cache the asset.
-
-### Example
-
-```lua
-local image = Instance.new("ImageLabel")
-image.Image = getcustomasset("image.png")
-print(image.Image) --> rbxasset://nTYyO6iSF3mND4FJ/image.png
-```
-
----
-
 ## identifyexecutor
 
 ```lua
