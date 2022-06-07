@@ -236,7 +236,7 @@ test("clonefunction", {}, function()
 	assert(test() == copy(), "The clone should return the same value as the original")
 	assert(test ~= copy, "The clone should not be equal to the original")
 	debug.setconstant(copy, 1, "fail")
-	assert(debug.getconstant(copy, 1) == "success", "Setting constants in the clone should not affect the original")
+	assert(debug.getconstant(test, 1) == "success", "Setting constants in the clone should not affect the original")
 end)
 
 test("getcallingscript", {})
