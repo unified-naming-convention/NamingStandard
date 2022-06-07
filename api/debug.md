@@ -1,4 +1,4 @@
-# debug
+# Debug
 
 The **debug** library is an extension of the Luau debug library, providing greater control over Luau functions.
 
