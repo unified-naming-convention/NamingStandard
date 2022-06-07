@@ -129,13 +129,9 @@ end
 
 task.defer(function()
 	waitForThreads()
-
-	local totalKeys = #supported.keys + #unsupported.keys
-	local totalAliases = #supported.aliases + #unsupported.aliases
-	local passesAndFails = #passes + #fails
 	
 	print("\n\n")
-	warn("This executor defined " .. totalKeys .. " globals and supports " .. totalAliases .. " aliases")
+	warn("This executor defined " .. #supported.keys .. " globals and supports " .. #supported.aliases .. " aliases")
 	print(concat(supported.keys, ", "))
 	print(concat(supported.aliases, ", ") .. "\n")
 	
@@ -148,6 +144,8 @@ task.defer(function()
 	
 	warn("...but " .. #fails .. " functions have failed their tests!")
 	print(concat(fails, ", ") .. "\n")
+
+	local passesAndFails = #passes + #fails
 	
 	warn("Analysis")
 	print(math.round(#passes / passesAndFails * 100) .. "% success rate (" .. #passes .. "/" .. passesAndFails .. ")")
