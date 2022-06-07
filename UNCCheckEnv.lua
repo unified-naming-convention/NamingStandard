@@ -13,10 +13,12 @@ local errors = {}
 local notes = {}
 local threadCount = 0
 
-if isfolder(".tests") then
-	delfolder(".tests")
+if isfolder and makefolder and delfolder then
+	if isfolder(".tests") then
+		delfolder(".tests")
+	end
+	makefolder(".tests")
 end
-makefolder(".tests")
 
 local function shallowEqual(a, b)
 	if type(a) ~= type(b) then
@@ -60,7 +62,7 @@ local function concat(...)
 end
 
 local function findGlobal(key)
-	local value = getgenv()
+	local value = getfenv(0)
 	local keys = string.split(key, ".")
 
 	for _, k in ipairs(keys) do
@@ -123,124 +125,180 @@ local function waitForThreads()
 	end
 end
 
+-- Output
+
+task.defer(function()
+	waitForThreads()
+
+	local totalKeys = #supported.keys + #unsupported.keys
+	local totalAliases = #supported.aliases + #unsupported.aliases
+	local passesAndFails = #passes + #fails
+	
+	print("\n\n")
+	warn("This executor defined " .. totalKeys .. " globals and supports " .. totalAliases .. " aliases")
+	print(concat(supported.keys, ", "))
+	print(concat(supported.aliases, ", ") .. "\n")
+	
+	warn("This executor is missing " .. #unsupported.keys .. " globals and " .. #unsupported.aliases .. " aliases")
+	print(concat(unsupported.keys, ", "))
+	print(concat(unsupported.aliases, ", ") .. "\n")
+	
+	warn(#passes .. " functions have passed their tests:")
+	print(concat(passes, ", ") .. "\n")
+	
+	warn("...but " .. #fails .. " functions have failed their tests!")
+	print(concat(fails, ", ") .. "\n")
+	
+	warn("Analysis")
+	print(math.round(#passes / passesAndFails * 100) .. "% success rate (" .. #passes .. "/" .. passesAndFails .. ")")
+	print("✅ - Pass, ⛔ - Fail, ⚠️ - Needs implementation\n")
+	
+	for i, key in ipairs(globals) do
+		local pass = table.find(passes, key) ~= nil
+		local fail = table.find(fails, key) ~= nil
+	
+		local error = errors[key]
+		local note = notes[key]
+	
+		if i == #globals then
+			key = key .. "\n"
+		end
+	
+		if pass then
+			print("✅ " .. key)
+		elseif fail then
+			task.wait(0.01)
+			warn("⛔ " .. key)
+			warn("   • " .. error)
+			task.wait(0.02)
+		else
+			print("⚠️ " .. key)
+		end
+	
+		if note then
+			print("   • " .. note)
+		end
+	
+		task.wait(0.01)
+	end
+	
+	print(math.round(#passes / passesAndFails * 100) .. "% success rate (" .. #passes .. "/" .. passesAndFails .. ")")
+end)
+
 -- Cache
 
-do
-	test("cache.invalidate", {}, function()
-		local container = Instance.new("Folder")
-		local part = Instance.new("Part", container)
-		cache.invalidate(container:FindFirstChild("Part"))
-		assert(part ~= container:FindFirstChild("Part"), "Reference `part` could not be invalidated")
-	end)
+test("cache.invalidate", {}, function()
+	local container = Instance.new("Folder")
+	local part = Instance.new("Part", container)
+	cache.invalidate(container:FindFirstChild("Part"))
+	assert(part ~= container:FindFirstChild("Part"), "Reference `part` could not be invalidated")
+end)
 
-	test("cache.iscached", {}, function()
-		local part = Instance.new("Part")
-		assert(cache.iscached(part), "Part should be cached")
-		cache.invalidate(part)
-		assert(not cache.iscached(part), "Part should not be cached")
-	end)
+test("cache.iscached", {}, function()
+	local part = Instance.new("Part")
+	assert(cache.iscached(part), "Part should be cached")
+	cache.invalidate(part)
+	assert(not cache.iscached(part), "Part should not be cached")
+end)
 
-	test("cache.replace", {}, function()
-		local part = Instance.new("Part")
-		local fire = Instance.new("Fire")
-		cache.replace(part, fire)
-		assert(part ~= fire, "Part was not replaced with Fire")
-	end)
+test("cache.replace", {}, function()
+	local part = Instance.new("Part")
+	local fire = Instance.new("Fire")
+	cache.replace(part, fire)
+	assert(part ~= fire, "Part was not replaced with Fire")
+end)
 
-	test("cloneref", {}, function()
-		local part = Instance.new("Part")
-		local clone = cloneref(part)
-		assert(part ~= clone, "Clone should not be equal to original")
-		clone.Name = "Test"
-		assert(part.Name == "Test", "Clone should have updated the original")
-	end)
+test("cloneref", {}, function()
+	local part = Instance.new("Part")
+	local clone = cloneref(part)
+	assert(part ~= clone, "Clone should not be equal to original")
+	clone.Name = "Test"
+	assert(part.Name == "Test", "Clone should have updated the original")
+end)
 
-	test("compareinstances", {}, function()
-		local part = Instance.new("Part")
-		local clone = cloneref(part)
-		assert(part ~= clone, "Clone should not be equal to original")
-		assert(compareinstances(part, clone), "Clone should be equal to original when using compareinstances()")
-	end)
-end
+test("compareinstances", {}, function()
+	local part = Instance.new("Part")
+	local clone = cloneref(part)
+	assert(part ~= clone, "Clone should not be equal to original")
+	assert(compareinstances(part, clone), "Clone should be equal to original when using compareinstances()")
+end)
 
 -- Closures
 
-do
-	test("checkcaller", {}, function()
-		assert(checkcaller(), "Main scope should return true")
+test("checkcaller", {}, function()
+	assert(checkcaller(), "Main scope should return true")
+end)
+
+test("clonefunction", {}, function()
+	notes.clonefunction = "Needs investigation"
+	local function test()
+		return "success"
+	end
+	local copy = clonefunction(test)
+	assert(test() == copy(), "The clone should return the same value as the original")
+	assert(test ~= copy, "The clone should not be equal to the original")
+	debug.setconstant(copy, 1, "fail")
+	assert(debug.getconstant(copy, 1) == "success", "Setting constants in the clone should not affect the original")
+end)
+
+test("getcallingscript", {})
+
+test("getscriptclosure", {"getscriptfunction"}, function()
+	local module = game:GetService("CoreGui").RobloxGui.Modules.Common.Constants
+	local constants = getrenv().require(module)
+	local generated = getscriptclosure(module)()
+	assert(constants ~= generated, "Generated module should not match the original")
+	assert(shallowEqual(constants, generated), "Generated constant table should be shallow equal to the original")
+end)
+
+test("hookfunction", {"replaceclosure"}, function()
+	local function test()
+		return true
+	end
+	local ref = hookfunction(test, function()
+		return false
 	end)
+	assert(test() == false, "Function should return false")
+	assert(ref() == true, "Original function should return true")
+	assert(test ~= ref, "Original function should not be same as the reference")
+end)
 
-	test("clonefunction", {}, function()
-		notes.clonefunction = "Needs investigation"
-		local function test()
-			return "success"
-		end
-		local copy = clonefunction(test)
-		assert(test() == copy(), "The clone should return the same value as the original")
-		assert(test ~= copy, "The clone should not be equal to the original")
-		debug.setconstant(copy, 1, "fail")
-		assert(debug.getconstant(copy, 1) == "success", "Setting constants in the clone should not affect the original")
-	end)
+test("iscclosure", {}, function()
+	assert(iscclosure(print) == true, "Function 'print' should be a C closure")
+	assert(iscclosure(function() end) == false, "Executor function should not be a C closure")
+end)
 
-	test("getcallingscript", {})
+test("islclosure", {}, function()
+	assert(islclosure(print) == false, "Function 'print' should not be a Lua closure")
+	assert(islclosure(function() end) == true, "Executor function should be a Lua closure")
+end)
 
-	test("getscriptclosure", {"getscriptfunction"}, function()
-		local module = game:GetService("CoreGui").RobloxGui.Modules.Common.Constants
-		local constants = getrenv().require(module)
-		local generated = getscriptclosure(module)()
-		assert(constants ~= generated, "Generated module should not match the original")
-		assert(shallowEqual(constants, generated), "Generated constant table should be shallow equal to the original")
-	end)
+test("isexecutorclosure", {"checkclosure", "isourclosure"}, function()
+	assert(isexecutorclosure(isexecutorclosure) == true, "Executor functions are executor closures")
+	assert(isexecutorclosure(newcclosure(function() end)) == true, "New C closures made in the executor are executor closures")
+	assert(isexecutorclosure(function() end) == true, "Executor Luau functions are executor closures")
+	assert(isexecutorclosure(print) == false, "Game globals are not executor closures")
+end)
 
-	test("hookfunction", {"replaceclosure"}, function()
-		local function test()
-			return true
-		end
-		local ref = hookfunction(test, function()
-			return false
-		end)
-		assert(test() == false, "Function should return false")
-		assert(ref() == true, "Original function should return true")
-		assert(test ~= ref, "Original function should not be same as the reference")
-	end)
+test("loadstring", {}, function()
+	local animate = game:GetService("Players").LocalPlayer.Character.Animate
+	local bytecode = getscriptbytecode(animate)
+	local func = loadstring(bytecode)
+	assert(func == nil, "Luau bytecode should not be loadable!")
 
-	test("iscclosure", {}, function()
-		assert(iscclosure(print) == true, "Function 'print' should be a C closure")
-		assert(iscclosure(function() end) == false, "Executor function should not be a C closure")
-	end)
+	assert(assert(loadstring("return ... + 1"))(1) == 2, "Failed to do simple math")
+	assert(type(select(2, loadstring("f"))) == "string", "Loadstring did not return anything for a compiler error")
+end)
 
-	test("islclosure", {}, function()
-		assert(islclosure(print) == false, "Function 'print' should not be a Lua closure")
-		assert(islclosure(function() end) == true, "Executor function should be a Lua closure")
-	end)
-
-	test("isexecutorclosure", {"checkclosure", "isourclosure"}, function()
-		assert(isexecutorclosure(isexecutorclosure) == true, "Executor functions are executor closures")
-		assert(isexecutorclosure(newcclosure(function() end)) == true, "New C closures made in the executor are executor closures")
-		assert(isexecutorclosure(function() end) == true, "Executor Luau functions are executor closures")
-		assert(isexecutorclosure(print) == false, "Game globals are not executor closures")
-	end)
-
-	test("loadstring", {}, function()
-		local animate = game:GetService("Players").LocalPlayer.Character.Animate
-		local bytecode = getscriptbytecode(animate)
-		local func = loadstring(bytecode)
-		assert(func == nil, "Luau bytecode should not be loadable!")
-
-		assert(assert(loadstring("return ... + 1"))(1) == 2, "Failed to do simple math")
-		assert(type(select(2, loadstring("f"))) == "string", "Loadstring did not return anything for a compiler error")
-	end)
-
-	test("newcclosure", {}, function()
-		local function test()
-			return true
-		end
-		local testC = newcclosure(test)
-		assert(test() == testC(), "New C closure should return the same value as the original")
-		assert(test ~= testC, "New C closure should not be same as the original")
-		assert(iscclosure(testC), "New C closure should be a C closure")
-	end)
-end
+test("newcclosure", {}, function()
+	local function test()
+		return true
+	end
+	local testC = newcclosure(test)
+	assert(test() == testC(), "New C closure should return the same value as the original")
+	assert(test ~= testC, "New C closure should not be same as the original")
+	assert(iscclosure(testC), "New C closure should be a C closure")
+end)
 
 -- Console
 
@@ -373,7 +431,6 @@ test("debug.getprotos", {}, function()
 			return true
 		end
 	end
-
 	for i in ipairs(debug.getprotos(test)) do
 		local proto = debug.getproto(test, i, true)[1]
 		local realproto = debug.getproto(test, i)
@@ -676,9 +733,7 @@ test("setrawmetatable", {}, function()
 	assert(object, "Did not return the original object")
 	assert(object.test == true, "Failed to change the metatable")
 	if objectReturned then
-		notes.setrawmetatable = objectReturned == object
-			and "Returned the original object"
-			or "Returned an unknown value"
+		notes.setrawmetatable = objectReturned == object and "Returned the original object" or "Returned an unknown value"
 	end
 end)
 
@@ -889,61 +944,3 @@ test("WebSocket.connect", {}, function()
 	end
 	ws:Close()
 end)
-
--- Output
-
-waitForThreads()
-
-local totalKeys = #supported.keys + #unsupported.keys
-local totalAliases = #supported.aliases + #unsupported.aliases
-local passesAndFails = #passes + #fails
-
-print("\n\n")
-warn("This executor defined " .. totalKeys .. " globals and supports " .. totalAliases .. " aliases")
-print(concat(supported.keys, ", "))
-print(concat(supported.aliases, ", ") .. "\n")
-
-warn("This executor is missing " .. #unsupported.keys .. " globals and " .. #unsupported.aliases .. " aliases")
-print(concat(unsupported.keys, ", "))
-print(concat(unsupported.aliases, ", ") .. "\n")
-
-warn(#passes .. " functions have passed their tests:")
-print(concat(passes, ", ") .. "\n")
-
-warn("...but " .. #fails .. " functions have failed their tests!")
-print(concat(fails, ", ") .. "\n")
-
-warn("Analysis")
-print(math.round(#passes / passesAndFails * 100) .. "% success rate (" .. #passes .. "/" .. passesAndFails .. ")")
-print("✅ - Pass, ⛔ - Fail, ⚠️ - Needs implementation\n")
-
-for i, key in ipairs(globals) do
-	local pass = table.find(passes, key) ~= nil
-	local fail = table.find(fails, key) ~= nil
-
-	local error = errors[key]
-	local note = notes[key]
-
-	if i == #globals then
-		key = key .. "\n"
-	end
-
-	if pass then
-		print("✅ " .. key)
-	elseif fail then
-		task.wait(0.01)
-		warn("⛔ " .. key)
-		warn("   • " .. error)
-		task.wait(0.02)
-	else
-		print("⚠️ " .. key)
-	end
-
-	if note then
-		print("   • " .. note)
-	end
-
-	task.wait(0.01)
-end
-
-print(math.round(#passes / passesAndFails * 100) .. "% success rate (" .. #passes .. "/" .. passesAndFails .. ")")
