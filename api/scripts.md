@@ -76,7 +76,7 @@ end
 function getrenv(): { [string]: any }
 ```
 
-Returns the global environment of the Roblox client. It can be used to access the global functions that LocalScripts and ModuleScripts use.
+Returns the global environment of the game client. It can be used to access the global functions that LocalScripts and ModuleScripts use.
 
 ### Example
 
@@ -237,7 +237,7 @@ function getthreadidentity(): number
 
 Returns the identity of the current thread.
 
-Learn more about thread identities [on the wiki page](https://roblox.fandom.com/wiki/Security_context).
+Learn more about thread identities [here](https://roblox.fandom.com/wiki/Security_context).
 
 ### Aliases
 
@@ -261,7 +261,7 @@ function setthreadidentity(identity: number): ()
 
 Sets the current thread identity.
 
-Learn more about thread identities [on the wiki page](https://roblox.fandom.com/wiki/Security_context).
+Learn more about thread identities [here](https://roblox.fandom.com/wiki/Security_context).
 
 ### Aliases
 

@@ -79,17 +79,19 @@ function debug.getinfo(func: function | number): DebugInfo
 
 Returns debugger information about a function or stack level.
 
-The fields of `DebugInfo` should include the following:
+### DebugInfo
 
- * `source` - The name of the chunk that created the function.
- * `short_src` - A "printable" version of `source` to be used in error messages.
- * `func` - The function itself.
- * `what` - The string "Lua" if the function is a Luau function, or "C" if it is a C function.
- * `currentline` - The current line where the given function is executing. When no line information is available, `currentline` is set to -1.
- * `name` - The name of the function. If it cannot find a name, then `name` is a blank string.
- * `nups` - The number of upvalues in the function.
- * `numparams` - The number of parameters in the function (always 0 for C functions).
- * `is_vararg` - Whether the function is a vararg function.
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `source` | string | The name of the chunk that created the function. |
+| `short_src` | string | A "printable" version of `source` to be used in error messages. |
+| `func` | function | The function itself. |
+| `what` | string | The string "Lua" if the function is a Luau function, or "C" if it is a C function. |
+| `currentline` | number | The current line where the given function is executing. When no line information is available, `currentline` is set to -1. |
+| `name` | string | The name of the function. If it cannot find a name, then `name` is a blank string. |
+| `nups` | number | The number of upvalues in the function. |
+| `numparams` | number | The number of parameters in the function (always 0 for C functions). |
+| `is_vararg` | boolean | Whether the function has a variadic argument. |
 
 > ### 🪲 Compatibility
 > Some executors are missing certain fields.
@@ -114,7 +116,7 @@ end
 
 ## debug.getproto
 
-`⛔ Exception` `🪲 Inconsistent`
+`⛔ Exception` `🛡️ Security`
 
 ```lua
 function debug.getproto(func: function | number, index: number, active: boolean?): function | {function}
@@ -122,7 +124,7 @@ function debug.getproto(func: function | number, index: number, active: boolean?
 
 Returns the proto at `index` in the function or level `func` if `active` is false.
 
-If `active` is false, then every active function of the proto is returned.
+If `active` is true, then every active function of the proto is returned.
 
 > ### 🛡️ Security
 > In some executors, the proto is non-functional if `active` is false. Debug information is preserved.\
@@ -151,7 +153,7 @@ proto() --> Hello, world!
 
 ## debug.getprotos
 
-`🪲 Inconsistent`
+`🛡️ Security`
 
 ```lua
 function debug.getprotos(func: function | number): {function}

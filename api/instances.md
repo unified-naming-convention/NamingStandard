@@ -1,6 +1,6 @@
-# Roblox
+# Instances
 
-The **Roblox** functions are used to interact with Roblox Instances and their properties.
+The **Instance** functions are used to interact with game objects and their properties.
 
 ---
 
@@ -12,7 +12,7 @@ function fireclickdetector(object: ClickDetector, distance: number?, event: stri
 
 Dispatches a click or hover event to the given ClickDetector. When absent, `distance` defaults to zero, and `event` defaults to "Click".
 
-Possible input events include 'MouseClick", 'RightMouseClick', 'MouseHoverEnter', and 'MouseHoverLeave'.
+Possible input events include 'MouseClick', 'RightMouseClick', 'MouseHoverEnter', and 'MouseHoverLeave'.
 
 ### Parameters
 
@@ -24,7 +24,7 @@ Possible input events include 'MouseClick", 'RightMouseClick', 'MouseHoverEnter'
 
 ```lua
 local clickDetector = workspace.Door.Button.ClickDetector
-fireclickdetector(clickDetector, 10 + math.random(), "MouseClick)
+fireclickdetector(clickDetector, 10 + math.random(), "MouseClick")
 ```
 
 ---
@@ -48,11 +48,11 @@ Returns the function assigned to a callback property of `object`, which cannot b
 local bindable = Instance.new("BindableFunction")
 
 function bindable.OnInvoke()
-		print("Hello, world!")
+	print("Hello, world!")
 end
 
-print(bindable.OnInvoke) --> Throws an error
 print(getcallbackvalue(bindable, "OnInvoke")) --> function()
+print(bindable.OnInvoke) --> Throws an error
 ```
 
 ---
@@ -77,15 +77,15 @@ Creates a list of Connection objects for the functions connected to `signal`.
 
 | Method | Description |
 | ----- | ----------- |
-| **`Fire`**`(...: any): ()` | Fires this connection with the provided arguments. |
-| **`Defer`**`(...: any): ()` | [Defers](https://devforum.roblox.com/t/beta-deferred-lua-event-handling/1240569) an event to connection with the provided arguments. |
-| **`Disconnect`**`(): ()` | Disconnects the connection. |
-| **`Disable`**`(): ()` | Prevents the connection from firing. |
-| **`Enable`**`(): ()` | Allows the connection to fire if it was previously disabled. |
+| `Fire(...: any): ()` | Fires this connection with the provided arguments. |
+| `Defer(...: any): ()` | [Defers](https://devforum.roblox.com/t/beta-deferred-lua-event-handling/1240569) an event to connection with the provided arguments. |
+| `Disconnect(): ()` | Disconnects the connection. |
+| `Disable(): ()` | Prevents the connection from firing. |
+| `Enable(): ()` | Allows the connection to fire if it was previously disabled. |
 
 ### Parameters
 
- * `signal` - The Roblox signal to retrieve connections from.
+ * `signal` - The signal to retrieve connections from.
 
 ### Example
 
@@ -248,7 +248,7 @@ print(gethiddenproperty(fire, "size_xml")) --> 15, true (hidden)
 function setrbxclipboard(data: string): boolean
 ```
 
-Sets Roblox Studio's clipboard to the given `rbxm` or `rbxmx` model data. This allows data from the game to be copied to Roblox Studio.
+Sets the Studio client's clipboard to the given `rbxm` or `rbxmx` model data. This allows data from the game to be copied into a Studio client.
 
 ### Parameters
 
@@ -258,7 +258,7 @@ Sets Roblox Studio's clipboard to the given `rbxm` or `rbxmx` model data. This a
 
 ```lua
 local data = readfile("model.rbxm")
-setrbxclipboard(data) -- Can be pasted into Roblox Studio
+setrbxclipboard(data) -- Can be pasted into Studio
 ```
 
 ---
