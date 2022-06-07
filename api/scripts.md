@@ -146,6 +146,40 @@ local bytecode = getscriptbytecode(animate)
 
 ---
 
+## getscriptclosure
+
+```lua
+function getscriptclosure(script: LocalScript | ModuleScript): function
+```
+
+Generates a new closure using the bytecode of `script`.
+
+### Parameters
+
+ * `script` - The script to recreate.
+
+### Aliases
+
+ * `getscriptfunction`
+
+### Example
+
+Compare the return value of a ModuleScript:
+
+```lua
+local module = game:GetService("CoreGui").RobloxGui.Modules.Common.Constants
+
+local constants = getrenv().require(module)
+local generatedConstants = getscriptclosure(module)()
+
+print(constants == generatedConstants) --> false
+for k, v in pairs(constants) do
+	print(k, typeof(v) == typeof(generatedConstants[k])) --> true
+end
+```
+
+---
+
 ## getscripthash
 
 ```lua

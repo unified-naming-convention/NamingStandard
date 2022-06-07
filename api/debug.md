@@ -26,9 +26,9 @@ local function foo()
 	print("Hello, world!")
 end
 
-print(debug.getconstant(foo, 1)) --> print
+print(debug.getconstant(foo, 1)) --> "print"
 print(debug.getconstant(foo, 2)) --> nil
-print(debug.getconstant(foo, 3)) --> Hello, world!
+print(debug.getconstant(foo, 3)) --> "Hello, world!"
 ```
 
 ---
@@ -51,20 +51,18 @@ Returns the constant table of the function or level `func`.
 ### Example
 
 ```lua
-local upvalue = 5678
-
 local function foo()
-	local num = 1234
-	print("Hello, world!", num, upvalue, warn)
+	local num = 5000 .. 50000
+	print("Hello, world!", num, warn)
 end
 
 for i, v in pairs(debug.getconstants(foo)) do
 	print(i, v)
 end
---> 1 print
---> 3 Hello, world!
---> 4 12345678
---> 5 warn
+--> 1 50000
+--> 2 "print"
+--> 4 "Hello, world!"
+--> 5 "warn"
 ```
 
 ---
@@ -259,7 +257,7 @@ local function foo()
 	print(upvalue)
 end
 
-print(debug.getupvalue(foo, 1)) --> Hello, world!
+print(debug.getupvalue(foo, 1)) --> upvalue
 ```
 
 An example of Luau optimization:

@@ -10,7 +10,7 @@ The **Instance** functions are used to interact with game objects and their prop
 function fireclickdetector(object: ClickDetector, distance: number?, event: string?): ()
 ```
 
-Dispatches a click or hover event to the given ClickDetector. When absent, `distance` defaults to zero, and `event` defaults to "Click".
+Dispatches a click or hover event to the given ClickDetector. When absent, `distance` defaults to zero, and `event` defaults to "MouseClick".
 
 Possible input events include 'MouseClick', 'RightMouseClick', 'MouseHoverEnter', and 'MouseHoverLeave'.
 

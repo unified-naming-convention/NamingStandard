@@ -102,40 +102,6 @@ end)
 
 ---
 
-## getscriptclosure
-
-```lua
-function getscriptclosure(script: LocalScript | ModuleScript): function
-```
-
-Generates a new closure using the bytecode of `script`.
-
-### Parameters
-
- * `script` - The script to recreate.
-
-### Aliases
-
- * `getscriptfunction`
-
-### Example
-
-Compare the return value of a ModuleScript that returns a function:
-
-```lua
-local module = game:GetService("Chat").ChatModules.MeCommand
-
-local Command = require(module)
-local CommandClone = getscriptclosure(module)()
-
--- Both functions have similar debug information
-table.foreach(debug.getinfo(Command), print)
-table.foreach(debug.getinfo(CommandClone), print)
-print(Command == CommandClone) --> false
-```
-
----
-
 ## hookfunction
 
 ```lua
@@ -224,7 +190,7 @@ print(islclosure(function() end)) --> true
 function isexecutorclosure(func: function): boolean
 ```
 
-Returns whether or not `func` is a C closure created by the executor.
+Returns whether or not `func` was created by the executor.
 
 ### Parameters
 
@@ -232,7 +198,6 @@ Returns whether or not `func` is a C closure created by the executor.
 
 ### Aliases
 
- * `isexecutorclosure`
  * `checkclosure`
  * `isourclosure`
 
@@ -240,9 +205,7 @@ Returns whether or not `func` is a C closure created by the executor.
 
 ```lua
 print(isexecutorclosure(isexecutorclosure)) --> true
-print(isexecutorclosure(newcclosure(function() end))) --> true
-
-print(isexecutorclosure(function() end)) --> false
+print(isexecutorclosure(function() end)) --> true
 print(isexecutorclosure(print)) --> false
 ```
 
