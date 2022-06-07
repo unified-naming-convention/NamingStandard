@@ -44,10 +44,14 @@ ws:Send("Hello, World!")
 ws = WebSocket.connect(url)
 ```
 
+### Methods
+
 | Method | Description |
 | ------ | ----------- |
 | `Send(message: string): ()` | Sends a message over the WebSocket connection. |
 | `Close(): ()` | Closes the WebSocket connection. |
+
+### Events
 
 | Event | Description |
 | ----- | ----------- |
