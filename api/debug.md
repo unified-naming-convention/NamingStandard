@@ -89,7 +89,7 @@ Returns debugger information about a function or stack level.
 | `name` | string | The name of the function. If it cannot find a name, then `name` is a blank string. |
 | `nups` | number | The number of upvalues in the function. |
 | `numparams` | number | The number of parameters in the function (always 0 for C functions). |
-| `is_vararg` | boolean | Whether the function has a variadic argument. |
+| `is_vararg` | number | Whether the function has a variadic argument (1 if it does, 0 if it does not). |
 
 > ### 🪲 Compatibility
 > Some executors are missing certain fields.

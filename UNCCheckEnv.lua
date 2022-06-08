@@ -24,35 +24,27 @@ local function shallowEqual(a, b)
 	if type(a) ~= type(b) then
 		return false
 	end
-
 	if type(a) == "table" then
 		for k, v in pairs(a) do
 			if type(v) == "function" or type(v) == "table" or type(v) == "userdata" then
 				if type(b[k]) ~= type(v) then
 					return false
 				end
-				continue
-			end
-			if b[k] ~= v then
+			elseif b[k] ~= v then
 				return false
 			end
 		end
-
 		for k, v in pairs(b) do
 			if type(v) == "function" or type(v) == "table" or type(v) == "userdata" then
 				if type(a[k]) ~= type(v) then
 					return false
 				end
-				continue
-			end
-			if a[k] ~= v then
+			elseif a[k] ~= v then
 				return false
 			end
 		end
-
 		return true
 	end
-
 	return a == b
 end
 
@@ -63,16 +55,13 @@ end
 
 local function findGlobal(key)
 	local value = getfenv(0)
-	local keys = string.split(key, ".")
-
-	for _, k in ipairs(keys) do
+	for _, k in ipairs(string.split(key, ".")) do
 		if value[k] ~= nil then
 			value = value[k]
 		else
 			return nil
 		end
 	end
-
 	return value
 end
 
