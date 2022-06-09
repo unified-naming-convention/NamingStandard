@@ -128,10 +128,10 @@ task.defer(function()
 	print(concat(unsupported.keys, ", "))
 	print(concat(unsupported.aliases, ", ") .. "\n")
 	
-	warn(#passes .. " functions have passed their tests:")
+	warn(#passes .. " functions passed their tests")
 	print(concat(passes, ", ") .. "\n")
 	
-	warn("...but " .. #fails .. " functions have failed their tests!")
+	warn("...but " .. #fails .. " functions failed their tests!")
 	print(concat(fails, ", ") .. "\n")
 
 	local passesAndFails = #passes + #fails
@@ -217,7 +217,6 @@ test("checkcaller", {}, function()
 end)
 
 test("clonefunction", {}, function()
-	notes.clonefunction = "Needs investigation"
 	local function test()
 		return "success"
 	end
@@ -313,14 +312,14 @@ test("crypt.encrypt", {}, function()
 	local encrypted, iv = crypt.encrypt("test", key, nil, "CBC")
 	assert(iv, "crypt.encrypt should return an IV")
 	local decrypted = crypt.decrypt(encrypted, key, iv, "CBC")
-	assert(decrypted == "test", "Encryption/decryption failed")
+	assert(decrypted == "test", "Failed to decrypt raw string from encrypted data")
 end)
 
 test("crypt.decrypt", {}, function()
 	local key, iv = crypt.generatekey(), crypt.generatekey()
 	local encrypted = crypt.encrypt("test", key, iv, "CBC")
 	local decrypted = crypt.decrypt(encrypted, key, iv, "CBC")
-	assert(decrypted == "test", "Encryption/decryption failed")
+	assert(decrypted == "test", "Failed to decrypt raw string from encrypted data")
 end)
 
 test("crypt.generatebytes", {}, function()
@@ -399,7 +398,7 @@ test("debug.getproto", {}, function()
 	assert(proto, "Failed to get the inner function")
 	assert(proto() == true, "The inner function did not return anything")
 	if not realproto() then
-		notes["debug.getproto"] = "Proto return values have been disabled on this executor"
+		notes["debug.getproto"] = "Proto return values are disabled on this executor"
 	end
 end)
 
@@ -420,7 +419,7 @@ test("debug.getprotos", {}, function()
 		local realproto = debug.getproto(test, i)
 		assert(proto(), "Failed to get inner function " .. i)
 		if not realproto() then
-			notes["debug.getprotos"] = "Proto return values have been disabled on this executor"
+			notes["debug.getprotos"] = "Proto return values are disabled on this executor"
 		end
 	end
 end)
@@ -554,14 +553,7 @@ test("loadfile", {}, function()
 	assert(type(select(2, loadfile(".tests/loadfile.txt"))) == "string", "Did not return anything for a compiler error")
 end)
 
-test("dofile", {}, function()
-	_G.__TEST_DOFILE_RETURN = nil
-	writefile(".tests/dofile.txt", "_G.__TEST_DOFILE_RETURN = true")
-	dofile(".tests/dofile.txt")
-	task.wait(0.5)
-	notes.dofile = "Delayed execution may cause an error"
-	assert(_G.__TEST_DOFILE_RETURN == true, "Could not run a file that sets a global")
-end)
+test("dofile", {}, function() end)
 
 -- Input
 
@@ -817,7 +809,7 @@ test("getscriptbytecode", {"dumpstring"}, function()
 end)
 
 test("getscripthash", {}, function()
-	local animate = game:GetService("Players").LocalPlayer.Character.Animate
+	local animate = game:GetService("Players").LocalPlayer.Character.Animate:Clone()
 	local hash = getscripthash(animate)
 	local source = animate.Source
 	animate.Source = "print('Hello, world!')"
@@ -860,11 +852,11 @@ test("Drawing", {}, function() end)
 test("Drawing.new", {}, function()
 	local drawing = Drawing.new("Square")
 	drawing.Visible = false
+	assert(isrenderobj(drawing) == true, "Did not return a valid render object")
 	local canDestroy = pcall(function()
 		drawing:Destroy()
 	end)
 	assert(canDestroy, "Drawing:Destroy() should not throw an error")
-	assert(isrenderobj(drawing) == true, "Did not return a valid render object")
 end)
 
 test("Drawing.Fonts", {}, function()
