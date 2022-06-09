@@ -182,7 +182,7 @@ test("cache.invalidate", {}, function()
 end)
 
 test("cache.iscached", {}, function()
-	local part = Instance.new("Part")
+	local part = Instance.new("Part", workspace)
 	assert(cache.iscached(part), "Part should be cached")
 	cache.invalidate(part)
 	assert(not cache.iscached(part), "Part should not be cached")
@@ -224,8 +224,6 @@ test("clonefunction", {}, function()
 	local copy = clonefunction(test)
 	assert(test() == copy(), "The clone should return the same value as the original")
 	assert(test ~= copy, "The clone should not be equal to the original")
-	debug.setconstant(copy, 1, "fail")
-	assert(debug.getconstant(test, 1) == "success", "Setting constants in the clone should not affect the original")
 end)
 
 test("getcallingscript", {})
@@ -261,18 +259,17 @@ test("islclosure", {}, function()
 end)
 
 test("isexecutorclosure", {"checkclosure", "isourclosure"}, function()
-	assert(isexecutorclosure(isexecutorclosure) == true, "Executor functions are executor closures")
-	assert(isexecutorclosure(newcclosure(function() end)) == true, "New C closures made in the executor are executor closures")
-	assert(isexecutorclosure(function() end) == true, "Executor Luau functions are executor closures")
-	assert(isexecutorclosure(print) == false, "Game globals are not executor closures")
+	assert(isexecutorclosure(isexecutorclosure) == true, "Did not return true for an executor global")
+	assert(isexecutorclosure(newcclosure(function() end)) == true, "Did not return true for an executor C closure")
+	assert(isexecutorclosure(function() end) == true, "Did not return true for an executor Luau closure")
+	assert(isexecutorclosure(print) == false, "Did not return false for a Roblox global")
 end)
 
 test("loadstring", {}, function()
 	local animate = game:GetService("Players").LocalPlayer.Character.Animate
 	local bytecode = getscriptbytecode(animate)
 	local func = loadstring(bytecode)
-	assert(func == nil, "Luau bytecode should not be loadable!")
-
+	assert(type(func) ~= "function", "Luau bytecode should not be loadable!")
 	assert(assert(loadstring("return ... + 1"))(1) == 2, "Failed to do simple math")
 	assert(type(select(2, loadstring("f"))) == "string", "Loadstring did not return anything for a compiler error")
 end)
@@ -594,7 +591,7 @@ test("mousescroll", {}, function() end)
 
 test("fireclickdetector", {}, function()
 	local detector = Instance.new("ClickDetector")
-	fireclickdetector(detector, 50, "RightMouseClick")
+	fireclickdetector(detector, 50, "MouseHoverEnter")
 end)
 
 test("getcallbackvalue", {}, function()
@@ -651,9 +648,6 @@ end)
 
 test("gethui", {}, function()
 	assert(typeof(gethui()) == "Instance", "Did not return an Instance")
-	if not gethui():IsA("BasePlayerGui") then
-		notes.gethui = "The ClassName of the returned Instance is " .. gethui().ClassName
-	end
 end)
 
 test("getinstances", {}, function()
@@ -737,21 +731,21 @@ end)
 test("identifyexecutor", {"getexecutorname"}, function()
 	local name, version = identifyexecutor()
 	assert(type(name) == "string", "Did not return a string for the name")
-	assert(type(version) == "string", "Did not return a string for the version")
+	notes.identifyexecutor = type(version) == "string" and "Returns version as a string" or "Does not return version"
 end)
 
 test("lz4compress", {}, function()
 	local raw = "Hello, world!"
 	local compressed = lz4compress(raw)
-	assert(type(compressed) == "string", "Did not return a string")
-	assert(lz4decompress(compressed, #raw) == raw, "Did not return the original string")
+	assert(type(compressed) == "string", "Compression did not return a string")
+	assert(lz4decompress(compressed, #raw) == raw, "Decompression did not return the original string")
 end)
 
 test("lz4decompress", {}, function()
 	local raw = "Hello, world!"
 	local compressed = lz4compress(raw)
-	assert(type(compressed) == "string", "Did not return a string")
-	assert(lz4decompress(compressed, #raw) == raw, "Did not return the original string")
+	assert(type(compressed) == "string", "Compression did not return a string")
+	assert(lz4decompress(compressed, #raw) == raw, "Decompression did not return the original string")
 end)
 
 test("messagebox", {}, function() end)
@@ -763,7 +757,7 @@ test("request", {"http.request", "http_request"}, function()
 		Url = "https://httpbin.org/user-agent",
 		Method = "GET",
 	})
-	assert(type(response) == "table", "Did not return a table")
+	assert(type(response) == "table", "Response must be a table")
 	assert(response.StatusCode == 200, "Did not return a 200 status code")
 	local data = game:GetService("HttpService"):JSONDecode(response.Body)
 	assert(type(data) == "table" and type(data["user-agent"]) == "string", "Did not return a table with a user-agent key")
@@ -800,6 +794,7 @@ test("getloadedmodules", {}, function()
 	local modules = getloadedmodules()
 	assert(type(modules) == "table", "Did not return a table")
 	assert(#modules > 0, "Did not return a table with any values")
+	assert(typeof(modules[1]) == "Instance", "First value is not an Instance")
 	assert(modules[1]:IsA("ModuleScript"), "First value is not a ModuleScript")
 end)
 
@@ -811,6 +806,7 @@ test("getrunningscripts", {}, function()
 	local scripts = getrunningscripts()
 	assert(type(scripts) == "table", "Did not return a table")
 	assert(#scripts > 0, "Did not return a table with any values")
+	assert(typeof(scripts[1]) == "Instance", "First value is not an Instance")
 	assert(scripts[1]:IsA("ModuleScript") or scripts[1]:IsA("LocalScript"), "First value is not a ModuleScript or LocalScript")
 end)
 
@@ -823,7 +819,11 @@ end)
 test("getscripthash", {}, function()
 	local animate = game:GetService("Players").LocalPlayer.Character.Animate
 	local hash = getscripthash(animate)
+	local source = animate.Source
 	animate.Source = "print('Hello, world!')"
+	task.defer(function()
+		animate.Source = source
+	end)
 	local newHash = getscripthash(animate)
 	assert(hash ~= newHash, "Did not return a different hash for a modified script")
 	assert(newHash == getscripthash(animate), "Did not return the same hash for a script with the same source")
@@ -833,6 +833,7 @@ test("getscripts", {}, function()
 	local scripts = getscripts()
 	assert(type(scripts) == "table", "Did not return a table")
 	assert(#scripts > 0, "Did not return a table with any values")
+	assert(typeof(scripts[1]) == "Instance", "First value is not an Instance")
 	assert(scripts[1]:IsA("ModuleScript") or scripts[1]:IsA("LocalScript"), "First value is not a ModuleScript or LocalScript")
 end)
 
@@ -859,9 +860,10 @@ test("Drawing", {}, function() end)
 test("Drawing.new", {}, function()
 	local drawing = Drawing.new("Square")
 	drawing.Visible = false
-	task.defer(function()
+	local canDestroy = pcall(function()
 		drawing:Destroy()
 	end)
+	assert(canDestroy, "Drawing:Destroy() should not throw an error")
 	assert(isrenderobj(drawing) == true, "Did not return a valid render object")
 end)
 
@@ -872,31 +874,23 @@ test("Drawing.Fonts", {}, function()
 	assert(Drawing.Fonts.Monospace == 3, "Did not return the correct id for Monospace")
 end)
 
-test("cleardrawcache", {}, function() end)
-
-test("getrenderproperty", {}, function()
-	local drawing = Drawing.new("Image")
-	drawing.Visible = true
-	assert(type(getrenderproperty(drawing, "Visible")) == "boolean", "Did not return the correct value for Image.Visible")
-	local success, result = pcall(function()
-		return getrenderproperty(drawing, "Color")
-	end)
-	if not success or not result then
-		notes.getrenderproperty = "Drawing.Color is not supported"
-	end
-	task.defer(function()
-		drawing:Destroy()
-	end)
-end)
-
 test("isrenderobj", {}, function()
 	local drawing = Drawing.new("Image")
 	drawing.Visible = true
 	assert(isrenderobj(drawing) == true, "Did not return true for an Image")
 	assert(isrenderobj(newproxy()) == false, "Did not return false for a blank table")
-	task.defer(function()
-		drawing:Destroy()
+end)
+
+test("getrenderproperty", {}, function()
+	local drawing = Drawing.new("Image")
+	drawing.Visible = true
+	assert(type(getrenderproperty(drawing, "Visible")) == "boolean", "Did not return a boolean value for Image.Visible")
+	local success, result = pcall(function()
+		return getrenderproperty(drawing, "Color")
 	end)
+	if not success or not result then
+		notes.getrenderproperty = "Image.Color is not supported"
+	end
 end)
 
 test("setrenderproperty", {}, function()
@@ -904,9 +898,10 @@ test("setrenderproperty", {}, function()
 	drawing.Visible = true
 	setrenderproperty(drawing, "Visible", false)
 	assert(drawing.Visible == false, "Did not set the value for Square.Visible")
-	task.defer(function()
-		drawing:Destroy()
-	end)
+end)
+
+test("cleardrawcache", {}, function()
+	cleardrawcache()
 end)
 
 -- WebSocket

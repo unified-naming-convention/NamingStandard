@@ -152,7 +152,7 @@ print(gethiddenproperty(fire, "Size")) --> 5, false
 ## gethui
 
 ```lua
-function gethui(): BasePlayerGui
+function gethui(): Folder
 ```
 
 Returns a hidden GUI container. Should be used as an alternative to CoreGui and PlayerGui.
