@@ -654,7 +654,7 @@ end)
 test("isscriptable", {}, function()
 	local fire = Instance.new("Fire")
 	assert(isscriptable(fire, "size_xml") == false, "Did not return false for a non-scriptable property (size_xml)")
-	assert(isscriptable(fire, "Size") == false, "Did not return true for a scriptable property (Size)")
+	assert(isscriptable(fire, "Size") == true, "Did not return true for a scriptable property (Size)")
 end)
 
 test("setscriptable", {}, function()
