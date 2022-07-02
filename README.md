@@ -1,4 +1,4 @@
-![UNC](https://scriptunc.org/badge.png)
+![UNC](img/badge.png)
 # Unified Naming Convention (UNC)
 Providing a unified scripting API for all script developers.
 
