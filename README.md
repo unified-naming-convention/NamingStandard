@@ -1,7 +1,8 @@
-# Unified Naming Convention
-aka UNC, is an organization between executor developers to provide a unified scripting API for our scripters.
+![UNC](https://scriptunc.org/badge.png)
+# Unified Naming Convention (UNC)
+Providing a unified scripting API for all script developers.
 
-**Please go to our official website for better styled information: https://scriptunc.org/**
+[For more information, visit us at our website.](https://scriptunc.org/)
 
 ## Why?
 Over the years scripting has gotten more and more complex to support multiple executors. This is because of the many unique naming conventions various executors use.
@@ -13,41 +14,25 @@ local is_executor_closure = is_syn_closure or is_fluxus_closure or is_sentinel_c
 This is reality for scripters who want cross compatibilty in their scripts. Scripters shouldn't have to do such laborous work just to attain cross compatability. The UNC seeks to solve this problem using naming conventions everyone agrees upon and follows.
 
 One variant of a script should naturally work on all script executors which have their environment properly fitted to the UNC. 
-
 ## How?
 The UNC provides standards for naming conventions as well as API functionality. The standard is written in markdown on this GitHub. Edits or additions are done through pull requests. Edits and additions are manually approved by the UNC council and discussed by everyone.
-
 ## Supporting UNC
-As a product owner, your support of UNC by following the API will result in a far smoother experience for scripters, as they are able to work on scripts that they can confidently say will work on **most** products. Once you have implemented UNC's API, you can display so by adding the badge to your website, thread or application.
-
-You can find the badge here: https://scriptunc.org/badge
-
-This will notify people of your alliance in providing scripters with an easier method of engineering scripts that your consumers can enjoy.
-
-NOTICE: If you, as a product owner, do not have all of these functions but yet support the ones you do - you then support UNC! You are more than able to display the badge on your website.
-
-## Checking your environment
-
-You can run the UNC environment checking script to see how well your executor environment supports the UNC standard. Find the script [here.](UNCCheckEnv.lua) The script determines what is missing, and writes the results to file under workspace.
-
+By supporting UNC you are to include compatibility for your scripting environment and discoverability to this repository or the website. If you are missing a function, please specify the missing functions in your documentation.
+## Integrity checks for UNC environments.
+To run an integrity check, use [UNCCheckEnv.lua](UNCCheckEnv.lua) on your designated scripting environment. Refer to the output for incompatible functions.
 # Contributing
-
 ## Guidelines
-* Adding a new function can be done by copying TEMPLATE.md, renaming it, and editing it as needed.
-* You may provide edits of existing functions, just edit and submit it.
-* When possible, organise files in their respective category folders.
-* When writing the function signature, please make sure it is **valid typed Luau syntax**. Documentation for typed luau can be found [here](https://luau-lang.org/typecheck#union-types).
-* When referencing arguments of a function in the description, please use `` in order to make `it look nice like so`.
-* Please confirm a function has not already been added to the API before you submit it.
-
-* Functions must be named appropriately, if you are contributing one - the following criteria applies for the naming:
-  * No brand names should be visible in your documentation.
-    * This also includes function alias' - UNC aims to be a vanilla naming convention, not a branded one
-   * The function name must be **descriptive of what the function does**.
-   * Aliases for shortening function names without good reason are *not* allowed. For example, `hookfunc` is not a alias supported by UNC. Function names should be written out in full.
-  
-* The description must be coherent, if the function is basic enough to not warrant one - you may put "N/A" in the description.
-* Functions don't always require an alias, you may just also put N/A in that field.
-
-## Submitting your edits and/or additions
-This can be done through [github pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests). Clone the repository, make your changes, then submit a pull request. The pull request will be reviewed by several members of the UNC before it is merged.
+* To contribute to the documentation, copy TEMPLATE.md's source code & modify it to your preference.
+* You may provide edits to existing functions by creating an edit and making a Pull Request.
+* Keep things organized. If a function does not seem to belong anywhere, make sure your descriptive text for the documentation makes clear of it's usage.
+* When writing a function signature, please make sure it's valid in [Luau Syntax](https://luau-lang.org/typecheck#union-types).
+* Use `escaping backticks` to enclose an argument or scriptable object when making a comment about it.
+* Deprecation & function vulnerability should be the only call to change a function's behavior.
+* If you are creating a function with an already existing behavior, please submit it as an alias to the function you are replicating.
+* Naming Criteria:
+	* Branding is not allowed, including aliases in written documentation.
+	* Self-explanatory naming is required if possible. (ex: `gethiddenproperty` with the description: "Returns the hidden property of the specified object.")
+	* Written function aliases cannot be short versions of their original name.
+* Coherent description required if function is complex, otherwise **N/A** is used.
+## Submissions for edits & additions
+Submissions are processed through [GitHub Pull Requests](https://docs.github.com/en/articles/creating-a-pull-request). Any modifications you make are cloned onto patches in your fork of the original repository. Once done with the modifications, you can submit the fork for a pull request which will then be reviewed and given appropriate action.
