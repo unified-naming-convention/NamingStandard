@@ -1,11 +1,11 @@
 # getnilinstances
 **Signature:** `getnilinstances(): {[number]: Instance}` <br>
 **Aliases:** N/A <br>
-**Description:** Returns every instance in the game that is parented to nil. <br>
+**Description:** Returns an array of all previously destroyed Instances in memory, Instances parented to nil, regardless of property 'RobloxLocked'.
 **Example:**
 ```lua
-for i,v in next, getnilinstances() do
-	print(i,v)
-	wait()
+for _, Instance in pairs(getnilinstances()) do
+	print(Instance)
+	task.wait(0)
 end
 ```
