@@ -22,7 +22,7 @@ By supporting UNC you are to include compatibility for your scripting environmen
 To run an integrity check, use [UNCCheckEnv.lua](UNCCheckEnv.lua) on your designated scripting environment. Refer to the output for incompatible functions.
 # Contributing
 ## Guidelines
-* To contribute to the documentation, copy TEMPLATE.md's source code & modify it to your preference.
+* To contribute to the documentation, copy [TEMPLATE.md](api/TEMPLATE.md)'s source code & modify it to your preference.
 * You may provide edits to existing functions by creating an edit and making a Pull Request.
 * Keep things organized. If a function does not seem to belong anywhere, make sure your descriptive text for the documentation makes clear of it's usage.
 * When writing a function signature, please make sure it's valid in [Luau Syntax](https://luau-lang.org/typecheck#union-types).
