@@ -1,8 +1,5 @@
 # setfpscap
-**Signature:** `setfpscap(fpscap: number)` <br>
-**Aliases:** N/A <br>
-**Description:** Sets the in-game FPS cap to `fpscap`. Set `fpscap` to 0 for unlimited FPS cap (no cap at all). <br>
-**Example:**
+**Signature**: `setfpscap(number)` <br> **Aliases**: <br> **Description**: Set max rendering frames-per-second to specified number. <br> **Example**:
 ```lua
-setfpscap(144) --sets the in-game FPS cap to 144!
+setfpscap(60)
 ```
