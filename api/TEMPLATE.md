@@ -1,10 +1,11 @@
-# functionname
-**Signature:** `functionsignature(foo: sometype): sometype` <br>
-**Aliases:** name aliases here <br>
-**Description:** Template for adding new files to the api folder. <br>
-**Example:**
+# myFunction
+**Signature**: `myFunction(foo: bar): bar` <br/>
+**Aliases**: `exampleFunction`, `identityFunction` <br/>
+**Description**: This function returns the value passed. <br/>
+**Example**: <br/>
 ```lua
-print(functionname)
+local foo: bar = ...
+if myFunction(foo) == foo then
+	return print("bar")
+end
 ```
-
-## Please ensure you follow the guidelines!
