@@ -19,7 +19,7 @@ The UNC provides standards for naming conventions as well as API functionality. 
 ## Supporting UNC
 By supporting UNC you are to include compatibility for your scripting environment and discoverability to this repository or the website. If you are missing a function, please specify the missing functions in your documentation.
 ## Integrity checks for UNC environments.
-To run an integrity check, use [UNCCheckEnv.lua](UNCCheckEnv.lua) on your designated scripting environment. Refer to the output for incompatible functions.
+To run an integrity check, use [UNCCheckEnv.lua](scripts/UNCCheckEnv.lua) on your designated scripting environment. Refer to the output for incompatible functions.
 # Contributing
 ## Guidelines
 * To contribute to the documentation, copy [TEMPLATE.md](api/TEMPLATE.md)'s source code & modify it to your preference.
