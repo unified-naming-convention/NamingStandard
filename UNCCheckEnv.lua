@@ -76,6 +76,7 @@ local function checkSupport(key, isAlias)
 end
 
 local function test(key, aliases, validator)
+rconsoleinfo(key)
 	table.insert(globals, key)
 
 	for _, alias in ipairs(aliases) do
@@ -309,16 +310,15 @@ end)
 
 test("crypt.encrypt", {}, function()
 	local key = crypt.generatekey()
-	local encrypted, iv = crypt.encrypt("test", key, nil, "CBC")
-	assert(iv, "crypt.encrypt should return an IV")
-	local decrypted = crypt.decrypt(encrypted, key, iv, "CBC")
+	local encrypted = crypt.encrypt("test", key)
+	local decrypted = crypt.decrypt(encrypted, key)
 	assert(decrypted == "test", "Failed to decrypt raw string from encrypted data")
 end)
 
 test("crypt.decrypt", {}, function()
-	local key, iv = crypt.generatekey(), crypt.generatekey()
-	local encrypted = crypt.encrypt("test", key, iv, "CBC")
-	local decrypted = crypt.decrypt(encrypted, key, iv, "CBC")
+	local key = crypt.generatekey()
+	local encrypted = crypt.encrypt("test", key)
+	local decrypted = crypt.decrypt(encrypted, key)
 	assert(decrypted == "test", "Failed to decrypt raw string from encrypted data")
 end)
 
@@ -626,15 +626,13 @@ end)
 
 test("gethiddenproperty", {}, function()
 	local fire = Instance.new("Fire")
-	local property, isHidden = gethiddenproperty(fire, "size_xml")
+	local property = gethiddenproperty(fire, "size_xml")
 	assert(property == 5, "Did not return the correct value")
-	assert(isHidden == true, "Did not return whether the property was hidden")
 end)
 
 test("sethiddenproperty", {}, function()
 	local fire = Instance.new("Fire")
 	local hidden = sethiddenproperty(fire, "size_xml", 10)
-	assert(hidden, "Did not return true for the hidden property")
 	assert(gethiddenproperty(fire, "size_xml") == 10, "Did not set the hidden property")
 end)
 
@@ -917,4 +915,4 @@ test("WebSocket.connect", {}, function()
 		end
 	end
 	ws:Close()
-end)
+end) 
