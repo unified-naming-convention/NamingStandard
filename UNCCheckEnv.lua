@@ -846,10 +846,10 @@ test("Drawing.new", {}, function()
 	local drawing = Drawing.new("Square")
 	drawing.Visible = false
 	assert(isrenderobj(drawing) == true, "Did not return a valid render object")
-	local canDestroy = pcall(function()
-		drawing:Destroy()
+	local canRemove = pcall(function()
+		drawing:Remove()
 	end)
-	assert(canDestroy, "Drawing:Destroy() should not throw an error")
+	assert(canRemove, "Drawing:Destroy() should not throw an error")
 end)
 
 test("Drawing.Fonts", {}, function()
