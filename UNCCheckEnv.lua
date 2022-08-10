@@ -845,11 +845,15 @@ test("Drawing", {}, function() end)
 test("Drawing.new", {}, function()
 	local drawing = Drawing.new("Square")
 	drawing.Visible = false
-	assert(isrenderobj(drawing) == true, "Did not return a valid render object")
+	if isrenderobj == nil then
+	    notes["Drawing.new"] = "Exploit should support isrenderobj"
+	else
+	    assert(isrenderobj(drawing) == true, "Did not return a valid render object")
+	end
 	local canRemove = pcall(function()
 		drawing:Remove()
 	end)
-	assert(canRemove, "Drawing:Destroy() should not throw an error")
+	assert(canRemove, "Drawing:Remove() should not throw an error")
 end)
 
 test("Drawing.Fonts", {}, function()
