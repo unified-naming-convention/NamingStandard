@@ -103,28 +103,6 @@ end)
 
 ---
 
-## isreadonly
-
-```lua
-function isreadonly(object: table): boolean
-```
-
-Returns whether `object` is frozen or read-only. Identical to `table.isfrozen`.
-
-### Parameters
-
- * `object` - A table or userdata.
-
-### Example
-
-```lua
-local object = {}
-table.freeze(object)
-print(isreadonly(object)) --> true
-```
-
----
-
 ## setrawmetatable
 
 ```lua
@@ -145,6 +123,28 @@ local object = setmetatable({}, {})
 print(getmetatable(object)) --> table
 setrawmetatable(object, { __metatable = "Hello, world!" })
 print(getmetatable(object)) --> Hello, world!
+```
+
+---
+
+## isreadonly
+
+```lua
+function isreadonly(object: table): boolean
+```
+
+Returns whether `object` is frozen or read-only. Identical to `table.isfrozen`.
+
+### Parameters
+
+ * `object` - A table or userdata.
+
+### Example
+
+```lua
+local object = {}
+table.freeze(object)
+print(isreadonly(object)) --> true
 ```
 
 ---
@@ -174,6 +174,8 @@ setreadonly(object, false)
 print(isreadonly(object)) --> false
 ```
 
+---
+
 ## getsafeenv
 
 ```lua
@@ -193,6 +195,8 @@ print(getsafeenv()) --> true
 -- getfenv() will make the environment "unsafe"
 print(getsafeenv(getfenv())) --> false
 ```
+
+---
 
 ## setsafeenv
 
@@ -226,3 +230,4 @@ print(math.tan(pi / 4)) --> 69
 -- functionality will be used
 setsafeenv(true)
 print(math.tan(pi / 4)) --> 1
+```
