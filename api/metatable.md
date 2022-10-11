@@ -103,28 +103,6 @@ end)
 
 ---
 
-## isreadonly
-
-```lua
-function isreadonly(object: table): boolean
-```
-
-Returns whether `object` is frozen or read-only. Identical to `table.isfrozen`.
-
-### Parameters
-
- * `object` - A table or userdata.
-
-### Example
-
-```lua
-local object = {}
-table.freeze(object)
-print(isreadonly(object)) --> true
-```
-
----
-
 ## setrawmetatable
 
 ```lua
@@ -145,6 +123,28 @@ local object = setmetatable({}, {})
 print(getmetatable(object)) --> table
 setrawmetatable(object, { __metatable = "Hello, world!" })
 print(getmetatable(object)) --> Hello, world!
+```
+
+---
+
+## isreadonly
+
+```lua
+function isreadonly(object: table): boolean
+```
+
+Returns whether `object` is frozen or read-only. Identical to `table.isfrozen`.
+
+### Parameters
+
+ * `object` - A table or userdata.
+
+### Example
+
+```lua
+local object = {}
+table.freeze(object)
+print(isreadonly(object)) --> true
 ```
 
 ---
@@ -172,4 +172,62 @@ print(isreadonly(object)) --> true
 
 setreadonly(object, false)
 print(isreadonly(object)) --> false
+```
+
+---
+
+## getsafeenv
+
+```lua
+function getsafeenv(object: table?): boolean
+```
+
+Returns the `object`'s `safeenv` property, or if `object` is not given, uses the caller environment.
+
+### Parameters
+
+ * `object` - A table.
+
+### Example
+
+```lua
+print(getsafeenv()) --> true
+-- getfenv() will make the environment "unsafe"
+print(getsafeenv(getfenv())) --> false
+```
+
+---
+
+## setsafeenv
+
+```lua
+function setsafeenv(object: table, value: boolean)
+function setsafeenv(value: boolean)
+```
+
+Sets the `safeenv` property of `object` to `value`. If only the value is given, the object defaults to the caller environment.
+
+### Parameters
+ * `object` - A table.
+ * `value` - The new property value to be set.
+
+### Example
+
+```lua
+-- NOTE: assuming a proper Luau implementation with fastcall optimizations
+local pi = math.pi
+print(math.tan(pi / 4)) --> 1
+-- getfenv() will make the environment "unsafe"; fastcalls will be disabled and
+-- our new "math" library will be used
+getfenv().math = {
+	tan = function()
+		return 69
+	end
+}
+print(math.tan(pi / 4)) --> 69
+-- Setting safeenv back to true will allow fastcalls to be used again,
+-- not bothering with our modified math library, so original math.tan
+-- functionality will be used
+setsafeenv(true)
+print(math.tan(pi / 4)) --> 1
 ```
