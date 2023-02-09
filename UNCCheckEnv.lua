@@ -540,10 +540,9 @@ end)
 test("getconnections", {}, function()
 	local types = {
 		Enabled = "boolean",
-		ForeignState = "boolean",
+		State = "boolean",
 		LuaConnection = "boolean",
 		Function = "function",
-		Thread = "thread",
 		Fire = "function",
 		Defer = "function",
 		Disconnect = "function",
