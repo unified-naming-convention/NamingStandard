@@ -1,176 +1,76 @@
-local globals = {}
-local supported = {
-	keys = {},
-	aliases = {},
-}
-local unsupported = {
-	keys = {},
-	aliases = {},
-}
-local passes = {}
-local fails = {}
-local errors = {}
-local notes = {}
-local threadCount = 0
+local passes, fails, undefined = 0, 0, 0
+local running = 0
 
-if isfolder and makefolder and delfolder then
-	if isfolder(".tests") then
-		delfolder(".tests")
-	end
-	makefolder(".tests")
-end
-
-local function shallowEqual(a, b)
-	if type(a) ~= type(b) then
-		return false
-	end
-	if type(a) == "table" then
-		for k, v in pairs(a) do
-			if type(v) == "function" or type(v) == "table" or type(v) == "userdata" then
-				if type(b[k]) ~= type(v) then
-					return false
-				end
-			elseif b[k] ~= v then
-				return false
-			end
-		end
-		for k, v in pairs(b) do
-			if type(v) == "function" or type(v) == "table" or type(v) == "userdata" then
-				if type(a[k]) ~= type(v) then
-					return false
-				end
-			elseif a[k] ~= v then
-				return false
-			end
-		end
-		return true
-	end
-	return a == b
-end
-
-local function concat(...)
-	local result = table.concat(...)
-	return result ~= "" and result or "N/A"
-end
-
-local function findGlobal(key)
+local function getGlobal(path)
 	local value = getfenv(0)
-	for _, k in ipairs(string.split(key, ".")) do
-		if value[k] ~= nil then
-			value = value[k]
-		else
-			return nil
-		end
+
+	while value ~= nil and path ~= "" do
+		local name, nextValue = string.match(path, "^([^.]+)%.?(.*)$")
+		value = value[name]
+		path = nextValue
 	end
+
 	return value
 end
 
-local function checkSupport(key, isAlias)
-	if findGlobal(key) ~= nil then
-		table.insert(isAlias and supported.aliases or supported.keys, key)
-		return true
-	else
-		table.insert(isAlias and unsupported.aliases or unsupported.keys, key)
-		return false
-	end
-end
-
-local function test(key, aliases, validator)
-rconsoleinfo(key)
-	table.insert(globals, key)
-
-	for _, alias in ipairs(aliases) do
-		checkSupport(alias, true)
-	end
-
-	if not checkSupport(key) then
-		table.insert(fails, key)
-		errors[key] = tostring(key) .. " is not supported"
-		return
-	end
-
-	if not validator then
-		return
-	end
-
-	threadCount += 1
+local function test(name, aliases, callback)
+rconsoleerror(name)
+	running += 1
 
 	task.spawn(function()
-		local success, message = pcall(validator)
-
-		if success then
-			table.insert(passes, key)
+		if not callback then
+			print("⏺️ " .. name)
+		elseif not getGlobal(name) then
+			fails += 1
+			warn("⛔ " .. name)
 		else
-			table.insert(fails, key)
-			errors[key] = message
+			local success, message = pcall(callback)
+	
+			if success then
+				passes += 1
+				print("✅ " .. name .. (message and " • " .. message or ""))
+			else
+				fails += 1
+				warn("⛔ " .. name .. " failed: " .. message)
+			end
+		end
+	
+		local undefinedAliases = {}
+	
+		for _, alias in ipairs(aliases) do
+			if getGlobal(alias) == nil then
+				table.insert(undefinedAliases, alias)
+			end
+		end
+	
+		if #undefinedAliases > 0 then
+			undefined += 1
+			warn("⚠️ " .. table.concat(undefinedAliases, ", "))
 		end
 
-		threadCount -= 1
+		running -= 1
 	end)
 end
 
-local function waitForThreads()
-	while threadCount > 0 do
-		task.wait(0.01)
-	end
-end
+-- Header and summary
 
--- Output
+print("\n")
+
+print("UNC Environment Check")
+print("✅ - Pass, ⛔ - Fail, ⏺️ - No test, ⚠️ - Missing aliases\n")
 
 task.defer(function()
-	waitForThreads()
-	
-	print("\n\n")
-	warn("This executor defined " .. #supported.keys .. " globals and supports " .. #supported.aliases .. " aliases")
-	print(concat(supported.keys, ", "))
-	print(concat(supported.aliases, ", ") .. "\n")
-	
-	warn("This executor is missing " .. #unsupported.keys .. " globals and " .. #unsupported.aliases .. " aliases")
-	print(concat(unsupported.keys, ", "))
-	print(concat(unsupported.aliases, ", ") .. "\n")
-	
-	warn(#passes .. " functions passed their tests")
-	print(concat(passes, ", ") .. "\n")
-	
-	warn("...but " .. #fails .. " functions failed their tests!")
-	print(concat(fails, ", ") .. "\n")
+	repeat task.wait() until running == 0
 
-	local passesAndFails = #passes + #fails
-	
-	warn("Analysis")
-	print(math.round(#passes / passesAndFails * 100) .. "% success rate (" .. #passes .. "/" .. passesAndFails .. ")")
-	print("✅ - Pass, ⛔ - Fail, ⚠️ - Needs implementation\n")
-	
-	for i, key in ipairs(globals) do
-		local pass = table.find(passes, key) ~= nil
-		local fail = table.find(fails, key) ~= nil
-	
-		local error = errors[key]
-		local note = notes[key]
-	
-		if i == #globals then
-			key = key .. "\n"
-		end
-	
-		if pass then
-			print("✅ " .. key)
-		elseif fail then
-			task.wait(0.01)
-			warn("⛔ " .. key)
-			warn("   • " .. error)
-			task.wait(0.02)
-		else
-			print("⚠️ " .. key)
-		end
-	
-		if note then
-			print("   • " .. note)
-		end
-	
-		task.wait(0.01)
-	end
-	
-	print(math.round(#passes / passesAndFails * 100) .. "% success rate (" .. #passes .. "/" .. passesAndFails .. ")")
+	local rate = math.round(passes / (passes + fails) * 100)
+	local outOf = passes .. " out of " .. (passes + fails)
+
+	print("\n")
+
+	print("UNC Summary")
+	print("✅ Tested with a " .. rate .. "% success rate (" .. outOf .. ")")
+	print("⛔ " .. fails .. " tests failed")
+	print("⚠️ " .. undefined .. " globals are missing aliases")
 end)
 
 -- Cache
@@ -183,7 +83,7 @@ test("cache.invalidate", {}, function()
 end)
 
 test("cache.iscached", {}, function()
-	local part = Instance.new("Part", workspace)
+	local part = Instance.new("Part")
 	assert(cache.iscached(part), "Part should be cached")
 	cache.invalidate(part)
 	assert(not cache.iscached(part), "Part should not be cached")
@@ -212,6 +112,41 @@ test("compareinstances", {}, function()
 end)
 
 -- Closures
+
+local function shallowEqual(t1, t2)
+	if t1 == t2 then
+		return true
+	end
+
+	local UNIQUE_TYPES = {
+		["function"] = true,
+		["table"] = true,
+		["userdata"] = true,
+		["thread"] = true,
+	}
+
+	for k, v in pairs(t1) do
+		if UNIQUE_TYPES[type(v)] then
+			if type(t2[k]) ~= type(v) then
+				return false
+			end
+		elseif t2[k] ~= v then
+			return false
+		end
+	end
+
+	for k, v in pairs(t2) do
+		if UNIQUE_TYPES[type(v)] then
+			if type(t2[k]) ~= type(v) then
+				return false
+			end
+		elseif t1[k] ~= v then
+			return false
+		end
+	end
+
+	return true
+end
 
 test("checkcaller", {}, function()
 	assert(checkcaller(), "Main scope should return true")
@@ -286,17 +221,17 @@ end)
 
 -- Console
 
-test("rconsoleclear", {"consoleclear"}, function() end)
+test("rconsoleclear", {"consoleclear"})
 
-test("rconsolecreate", {"consolecreate"}, function() end)
+test("rconsolecreate", {"consolecreate"})
 
-test("rconsoledestroy", {"consoledestroy"}, function() end)
+test("rconsoledestroy", {"consoledestroy"})
 
-test("rconsoleinput", {"consoleinput"}, function() end)
+test("rconsoleinput", {"consoleinput"})
 
-test("rconsoleprint", {"consoleprint"}, function() end)
+test("rconsoleprint", {"consoleprint"})
 
-test("rconsolesettitle", {"rconsolename", "consolesettitle"}, function() end)
+test("rconsolesettitle", {"rconsolename", "consolesettitle"})
 
 -- Crypt
 
@@ -398,7 +333,7 @@ test("debug.getproto", {}, function()
 	assert(proto, "Failed to get the inner function")
 	assert(proto() == true, "The inner function did not return anything")
 	if not realproto() then
-		notes["debug.getproto"] = "Proto return values are disabled on this executor"
+		return "Proto return values are disabled on this executor"
 	end
 end)
 
@@ -419,7 +354,7 @@ test("debug.getprotos", {}, function()
 		local realproto = debug.getproto(test, i)
 		assert(proto(), "Failed to get inner function " .. i)
 		if not realproto() then
-			notes["debug.getprotos"] = "Proto return values are disabled on this executor"
+			return "Proto return values are disabled on this executor"
 		end
 	end
 end)
@@ -477,6 +412,13 @@ end)
 
 -- Filesystem
 
+if isfolder and makefolder and delfolder then
+	if isfolder(".tests") then
+		delfolder(".tests")
+	end
+	makefolder(".tests")
+end
+
 test("readfile", {}, function()
 	writefile(".tests/readfile.txt", "success")
 	assert(readfile(".tests/readfile.txt") == "success", "Did not return the contents of the file")
@@ -506,7 +448,7 @@ test("writefile", {}, function()
 		assert(isfile(".tests/writefile.txt"))
 	end)
 	if not requiresFileExt then
-		notes.writefile = "This executor requires a file extension in writefile"
+		return "This executor requires a file extension in writefile"
 	end
 end)
 
@@ -550,10 +492,11 @@ test("loadfile", {}, function()
 	writefile(".tests/loadfile.txt", "return ... + 1")
 	assert(assert(loadfile(".tests/loadfile.txt"))(1) == 2, "Failed to load a file with arguments")
 	writefile(".tests/loadfile.txt", "f")
-	assert(type(select(2, loadfile(".tests/loadfile.txt"))) == "string", "Did not return anything for a compiler error")
+	local callback, err = loadfile(".tests/loadfile.txt")
+	assert(err and not callback, "Did not return an error message for a compiler error")
 end)
 
-test("dofile", {}, function() end)
+test("dofile", {})
 
 -- Input
 
@@ -561,23 +504,23 @@ test("isrbxactive", {"isgameactive"}, function()
 	assert(type(isrbxactive()) == "boolean", "Did not return a boolean value")
 end)
 
-test("mouse1click", {}, function() end)
+test("mouse1click", {})
 
-test("mouse1press", {}, function() end)
+test("mouse1press", {})
 
-test("mouse1release", {}, function() end)
+test("mouse1release", {})
 
-test("mouse2click", {}, function() end)
+test("mouse2click", {})
 
-test("mouse2press", {}, function() end)
+test("mouse2press", {})
 
-test("mouse2release", {}, function() end)
+test("mouse2release", {})
 
-test("mousemoveabs", {}, function() end)
+test("mousemoveabs", {})
 
-test("mousemoverel", {}, function() end)
+test("mousemoverel", {})
 
-test("mousescroll", {}, function() end)
+test("mousescroll", {})
 
 -- Instances
 
@@ -597,8 +540,13 @@ end)
 test("getconnections", {}, function()
 	local types = {
 		Enabled = "boolean",
+		ForeignState = "boolean",
+		LuaConnection = "boolean",
 		Function = "function",
+		Thread = "thread",
 		Fire = "function",
+		Defer = "function",
+		Disconnect = "function",
 		Disable = "function",
 		Enable = "function",
 	}
@@ -621,8 +569,9 @@ end)
 
 test("gethiddenproperty", {}, function()
 	local fire = Instance.new("Fire")
-	local property = gethiddenproperty(fire, "size_xml")
+	local property, isHidden = gethiddenproperty(fire, "size_xml")
 	assert(property == 5, "Did not return the correct value")
+	assert(isHidden == true, "Did not return whether the property was hidden")
 end)
 
 test("sethiddenproperty", {}, function()
@@ -657,7 +606,7 @@ test("setscriptable", {}, function()
 	assert(isscriptable(fire, "size_xml") == true, "Did not set the scriptable property")
 end)
 
-test("setrbxclipboard", {}, function() end)
+test("setrbxclipboard", {})
 
 -- Metatable
 
@@ -699,7 +648,7 @@ test("setrawmetatable", {}, function()
 	assert(object, "Did not return the original object")
 	assert(object.test == true, "Failed to change the metatable")
 	if objectReturned then
-		notes.setrawmetatable = objectReturned == object and "Returned the original object" or "Returned an unknown value"
+		return objectReturned == object and "Returned the original object" or "Did not return the original object"
 	end
 end)
 
@@ -716,7 +665,7 @@ end)
 test("identifyexecutor", {"getexecutorname"}, function()
 	local name, version = identifyexecutor()
 	assert(type(name) == "string", "Did not return a string for the name")
-	notes.identifyexecutor = type(version) == "string" and "Returns version as a string" or "Does not return version"
+	return type(version) == "string" and "Returns version as a string" or "Does not return version"
 end)
 
 test("lz4compress", {}, function()
@@ -733,9 +682,9 @@ test("lz4decompress", {}, function()
 	assert(lz4decompress(compressed, #raw) == raw, "Decompression did not return the original string")
 end)
 
-test("messagebox", {}, function() end)
+test("messagebox", {})
 
-test("queue_on_teleport", {"queueonteleport"}, function() end)
+test("queue_on_teleport", {"queueonteleport"})
 
 test("request", {"http.request", "http_request"}, function()
 	local response = request({
@@ -746,19 +695,26 @@ test("request", {"http.request", "http_request"}, function()
 	assert(response.StatusCode == 200, "Did not return a 200 status code")
 	local data = game:GetService("HttpService"):JSONDecode(response.Body)
 	assert(type(data) == "table" and type(data["user-agent"]) == "string", "Did not return a table with a user-agent key")
-	notes.request = "User-Agent: " .. data["user-agent"]
+	return "User-Agent: " .. data["user-agent"]
 end)
 
-test("setclipboard", {"toclipboard"}, function() end)
+test("setclipboard", {"toclipboard"})
 
 test("setfpscap", {}, function()
-	setfpscap(30)
-	task.wait(0.1)
-	local step30 = game:GetService("RunService").RenderStepped:Wait()
+	local renderStepped = game:GetService("RunService").RenderStepped
+	local function step()
+		renderStepped:Wait()
+		local sum = 0
+		for _ = 1, 5 do
+			sum += 1 / renderStepped:Wait()
+		end
+		return math.round(sum / 5)
+	end
+	setfpscap(60)
+	local step60 = step()
 	setfpscap(0)
-	task.wait(0.1)
-	local step0 = game:GetService("RunService").RenderStepped:Wait()
-	notes.setfpscap = "30 FPS: " .. step30 * 1000 .. "ms • MAX FPS: " .. step0 * 1000 .. "ms"
+	local step0 = step()
+	return step60 .. "fps @60 • " .. step0 .. "fps @0"
 end)
 
 -- Scripts
@@ -840,20 +796,15 @@ end)
 
 -- Drawing
 
-test("Drawing", {}, function() end)
+test("Drawing", {})
 
 test("Drawing.new", {}, function()
 	local drawing = Drawing.new("Square")
 	drawing.Visible = false
-	if isrenderobj == nil then
-	    notes["Drawing.new"] = "Exploit should support isrenderobj"
-	else
-	    assert(isrenderobj(drawing) == true, "Did not return a valid render object")
-	end
-	local canRemove = pcall(function()
-		drawing:Remove()
+	local canDestroy = pcall(function()
+		drawing:Destroy()
 	end)
-	assert(canRemove, "Drawing:Remove() should not throw an error")
+	assert(canDestroy, "Drawing:Destroy() should not throw an error")
 end)
 
 test("Drawing.Fonts", {}, function()
@@ -878,7 +829,7 @@ test("getrenderproperty", {}, function()
 		return getrenderproperty(drawing, "Color")
 	end)
 	if not success or not result then
-		notes.getrenderproperty = "Image.Color is not supported"
+		return "Image.Color is not supported"
 	end
 end)
 
@@ -895,7 +846,7 @@ end)
 
 -- WebSocket
 
-test("WebSocket", {}, function() end)
+test("WebSocket", {})
 
 test("WebSocket.connect", {}, function()
 	local types = {
@@ -914,4 +865,4 @@ test("WebSocket.connect", {}, function()
 		end
 	end
 	ws:Close()
-end) 
+end)
