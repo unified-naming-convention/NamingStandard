@@ -687,7 +687,7 @@ test("queue_on_teleport", {"queueonteleport"})
 
 test("request", {"http.request", "http_request"}, function()
 	local response = request({
-		Url = "https://httpbin.org/user-agent",
+		Url = "http://httpbin.org/user-agent",
 		Method = "GET",
 	})
 	assert(type(response) == "table", "Response must be a table")
