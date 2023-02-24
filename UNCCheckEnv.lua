@@ -751,7 +751,7 @@ test("getrunningscripts", {}, function()
 	assert(scripts[1]:IsA("ModuleScript") or scripts[1]:IsA("LocalScript"), "First value is not a ModuleScript or LocalScript")
 end)
 
-test("getscriptbytecode", {"dumpstring", "getscriptfunction"}, function()
+test("getscriptbytecode", {"dumpstring"}, function()
 	local animate = game:GetService("Players").LocalPlayer.Character.Animate
 	local bytecode = getscriptbytecode(animate)
 	assert(type(bytecode) == "string", "Did not return a string for Character.Animate (a " .. animate.ClassName .. ")")
