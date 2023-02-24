@@ -14,7 +14,7 @@ local function getGlobal(path)
 end
 
 local function test(name, aliases, callback)
-rconsoleerror(name)
+        rconsoleinfo(name) -- debug which function thats going to get tested
 	running += 1
 
 	task.spawn(function()
@@ -201,9 +201,8 @@ test("isexecutorclosure", {"checkclosure", "isourclosure"}, function()
 end)
 
 test("loadstring", {}, function()
-	local animate = game:GetService("Players").LocalPlayer.Character.Animate
-	local bytecode = getscriptbytecode(animate)
-	local func = loadstring(bytecode)
+        -- deprecated the usage of getscriptbytecode here, it is not required
+	local func = loadstring("UNC_Test")
 	assert(type(func) ~= "function", "Luau bytecode should not be loadable!")
 	assert(assert(loadstring("return ... + 1"))(1) == 2, "Failed to do simple math")
 	assert(type(select(2, loadstring("f"))) == "string", "Loadstring did not return anything for a compiler error")
@@ -750,7 +749,7 @@ test("getrunningscripts", {}, function()
 	assert(scripts[1]:IsA("ModuleScript") or scripts[1]:IsA("LocalScript"), "First value is not a ModuleScript or LocalScript")
 end)
 
-test("getscriptbytecode", {"dumpstring"}, function()
+test("getscriptbytecode", {"dumpstring", "getscriptfunction"}, function()
 	local animate = game:GetService("Players").LocalPlayer.Character.Animate
 	local bytecode = getscriptbytecode(animate)
 	assert(type(bytecode) == "string", "Did not return a string for Character.Animate (a " .. animate.ClassName .. ")")
