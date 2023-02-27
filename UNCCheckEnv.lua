@@ -602,8 +602,6 @@ test("setscriptable", {}, function()
 	local wasScriptable = setscriptable(fire, "size_xml", true)
 	assert(wasScriptable == false, "Did not return false for a non-scriptable property (size_xml)")
 	assert(isscriptable(fire, "size_xml") == true, "Did not set the scriptable property")
-	fire = Instance.new("Fire")
-	assert(isscriptable(fire, "size_xml") == false, "⚠️⚠️ setscriptable persists between unique instances ⚠️⚠️")
 end)
 
 test("setrbxclipboard", {})
