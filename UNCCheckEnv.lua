@@ -14,63 +14,43 @@ local function getGlobal(path)
 end
 
 local function test(name, aliases, callback)
-	running += 1
+    local success, message = pcall(callback)
+    local undefinedAliases = {}
 
-	task.spawn(function()
-		if not callback then
-			print("⏺️ " .. name)
-		elseif not getGlobal(name) then
-			fails += 1
-			warn("⛔ " .. name)
-		else
-			local success, message = pcall(callback)
-	
-			if success then
-				passes += 1
-				print("✅ " .. name .. (message and " • " .. message or ""))
-			else
-				fails += 1
-				warn("⛔ " .. name .. " failed: " .. message)
-			end
-		end
-	
-		local undefinedAliases = {}
-	
-		for _, alias in ipairs(aliases) do
-			if getGlobal(alias) == nil then
-				table.insert(undefinedAliases, alias)
-			end
-		end
-	
-		if #undefinedAliases > 0 then
-			undefined += 1
-			warn("⚠️ " .. table.concat(undefinedAliases, ", "))
-		end
+    for _, alias in ipairs(aliases) do
+        if not _G[alias] then
+            table.insert(undefinedAliases, alias)
+        end
+    end
 
-		running -= 1
-	end)
+    if success then
+        print("✅ " .. name .. (message and " • " .. message or ""))
+    else
+        print("⛔ " .. name .. " failed: " .. message)
+    end
+
+    if #undefinedAliases > 0 then
+        print("⚠️ " .. table.concat(undefinedAliases, ", "))
+    end
 end
 
 -- Header and summary
 
 print("\n")
-
 print("UNC Environment Check")
 print("✅ - Pass, ⛔ - Fail, ⏺️ - No test, ⚠️ - Missing aliases\n")
 
-task.defer(function()
-	repeat task.wait() until running == 0
+task.waitWhile(function() return running > 0 end)
 
-	local rate = math.round(passes / (passes + fails) * 100)
-	local outOf = passes .. " out of " .. (passes + fails)
+local rate = math.floor((passes / (passes + fails)) * 100)
+local outOf = passes + fails
 
-	print("\n")
+print("\n")
+print("UNC Summary")
+print(string.format("✅ Tested with a %d%% success rate (%d out of %d)", rate, passes, outOf))
+print(string.format("⛔ %d tests failed", fails))
+print(string.format("⚠️ %d globals are missing aliases", undefined))
 
-	print("UNC Summary")
-	print("✅ Tested with a " .. rate .. "% success rate (" .. outOf .. ")")
-	print("⛔ " .. fails .. " tests failed")
-	print("⚠️ " .. undefined .. " globals are missing aliases")
-end)
 
 -- Cache
 
@@ -849,23 +829,36 @@ end)
 
 -- WebSocket
 
+-- Define the first test with no aliases
 test("WebSocket", {})
 
+-- Define the second test for WebSocket.connect
 test("WebSocket.connect", {}, function()
+	-- Define the expected types for each property of the WebSocket object
 	local types = {
 		Send = "function",
 		Close = "function",
 		OnMessage = {"table", "userdata"},
 		OnClose = {"table", "userdata"},
 	}
-	local ws = WebSocket.connect("ws://echo.websocket.events")
+	
+	-- Call the WebSocket.connect function with an echo server URL
+	local ws = WebSocket.connect("ws://echo.websocket.org")
+	
+	-- Assert that the returned object is a table or userdata
 	assert(type(ws) == "table" or type(ws) == "userdata", "Did not return a table or userdata")
+	
+	-- Check the types of each property of the WebSocket object
 	for k, v in pairs(types) do
 		if type(v) == "table" then
+			-- If the expected type is an array of possible types, check if the actual type matches any of them
 			assert(table.find(v, type(ws[k])), "Did not return a " .. table.concat(v, ", ") .. " for " .. k .. " (a " .. type(ws[k]) .. ")")
 		else
+			-- If the expected type is a single type, check if the actual type matches it
 			assert(type(ws[k]) == v, "Did not return a " .. v .. " for " .. k .. " (a " .. type(ws[k]) .. ")")
 		end
 	end
+	
+	-- Close the WebSocket connection
 	ws:Close()
 end)
