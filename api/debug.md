@@ -428,7 +428,7 @@ print(debug.getmetatable(object)) --> table
 
 ---
 
-## setrawmetatable
+## debug.setmetatable
 
 ```lua
 function debug.setmetatable(object: table, metatable: table): ()
