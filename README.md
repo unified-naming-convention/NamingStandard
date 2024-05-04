@@ -1,7 +1,18 @@
 # Unified Naming Convention
 aka UNC, is an organization between executor developers to provide a unified scripting API for our scripters.
 
-**Please go to our official website for better styled information: https://scriptunc.org/**
+## UNC Has Retired 👋
+
+Who would've thought a globally documented API would be **such a hit**? We sure did! UNC was a great concept and it's lifespan proved it, focusing on building an excellent API for scripters allowed for those scripters to create great scripts, making our software just that more usable.
+
+Two years ago, UNC helped to marginally resolve the issue of poorly named functions. Today, it's founders at ([Script-Ware](https://script-ware.com/)) have stopped engineering script execution software for Roblox where these functions are used.
+
+You are welcome to keep using UNC as a benchmark for software, but it will eventually grow out of date with newer features. We're sorry! We hope one day we'll make it up to you.
+
+---
+~~**Please go to our official website for better styled information: https://scriptunc.org/**~~
+
+This website has since been removed, you can find all of the same information below.
 
 ## Why?
 Over the years scripting has gotten more and more complex to support multiple executors. This is because of the many unique naming conventions various executors use.
@@ -20,7 +31,8 @@ The UNC provides standards for naming conventions as well as API functionality. 
 ## Supporting UNC
 As a product owner, your support of UNC by following the API will result in a far smoother experience for scripters, as they are able to work on scripts that they can confidently say will work on **most** products. Once you have implemented UNC's API, you can display so by adding the badge to your website, thread or application.
 
-You can find the badge here: https://scriptunc.org/badge
+You can find the badge here: ~~https://scriptunc.org/badge~~
+(This badge has since been removed from our website)
 
 This will notify people of your alliance in providing scripters with an easier method of engineering scripts that your consumers can enjoy.
 
