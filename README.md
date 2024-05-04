@@ -5,7 +5,7 @@ aka UNC, is an organization between executor developers to provide a unified scr
 
 Who would've thought a globally documented API would be **such a hit**? We sure did! UNC was a great concept and it's lifespan proved it, focusing on building an excellent API for scripters allowed for those scripters to create great scripts, making our software just that more usable.
 
-Two years ago, UNC helped to marginally resolve the issue of poorly named functions. Today, it's founders at ([Script-Ware](https://script-ware.com/)) have stopped engineering script execution software for Roblox where these functions are used.
+Two years ago, UNC helped to resolve the issue of poorly named functions. Today, it's founders at ([Script-Ware](https://script-ware.com/)) have stopped engineering script execution software for Roblox where these functions are used.
 
 You are welcome to keep using UNC as a benchmark for software, but it will eventually grow out of date with newer features. We're sorry! We hope one day we'll make it up to you.
 
