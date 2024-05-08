@@ -403,3 +403,49 @@ end)
 
 foo() --> Hello, world!
 ```
+
+---
+
+## debug.getmetatable
+
+```lua
+function debug.getmetatable(object: table): table
+```
+
+Returns the metatable of `object`, where the `__metatable` field would normally lock the metatable.
+
+### Parameters
+
+ * `object` - An object with a metatable.
+
+### Example
+
+```lua
+local object = setmetatable({}, { __metatable = "Locked!" })
+print(getmetatable(object)) --> Locked!
+print(debug.getmetatable(object)) --> table
+```
+
+---
+
+## debug.setmetatable
+
+```lua
+function debug.setmetatable(object: table, metatable: table): ()
+```
+
+Sets the metatable of `object` to `metatable`, where the `__metatable` field would normally lock the metatable.
+
+### Parameters
+
+ * `object` - A table or userdata.
+ * `metatable` - The metatable to set.
+
+### Example
+
+```lua
+local object = setmetatable({}, {})
+print(getmetatable(object)) --> table
+debug.setmetatable(object, { __metatable = "Hello, world!" })
+print(getmetatable(object)) --> Hello, world!
+```
